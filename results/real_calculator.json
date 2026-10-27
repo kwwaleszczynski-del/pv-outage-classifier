@@ -1,0 +1,206 @@
+{
+ "2016": {
+  "tool": {
+   "base_h": 3915.5,
+   "energy_kwh": 713421.7,
+   "classes": {
+    "inverter_trip": {
+     "down_h": 64.057,
+     "lost_kwh": 12443.3,
+     "outage": true
+    },
+    "string_open": {
+     "down_h": 0.0,
+     "lost_kwh": 0.0,
+     "outage": true
+    },
+    "bypass_short": {
+     "down_h": 0.0,
+     "lost_kwh": 0.0,
+     "outage": false
+    },
+    "mppt_failure": {
+     "down_h": 0.0,
+     "lost_kwh": 0.0,
+     "outage": false
+    },
+    "partial_shading": {
+     "down_h": 51.967,
+     "lost_kwh": 1293.0,
+     "outage": false
+    },
+    "soiling": {
+     "down_h": 6.88,
+     "lost_kwh": 122.9,
+     "outage": false
+    },
+    "snow": {
+     "down_h": 0.0,
+     "lost_kwh": 0.0,
+     "outage": true
+    },
+    "curtailment": {
+     "down_h": 0.0,
+     "lost_kwh": 0.0,
+     "outage": true
+    },
+    "grid_outage": {
+     "down_h": 0.0,
+     "lost_kwh": 0.0,
+     "outage": true
+    },
+    "comm_loss": {
+     "down_h": 273.292,
+     "lost_kwh": 0.0,
+     "outage": true
+    },
+    "frozen_data": {
+     "down_h": 0.0,
+     "lost_kwh": 0.0,
+     "outage": true
+    },
+    "sensor_fault": {
+     "down_h": 0.0,
+     "lost_kwh": 0.0,
+     "outage": false
+    }
+   }
+  }
+ },
+ "2017": {
+  "tool": {
+   "base_h": 3905.75,
+   "energy_kwh": 744129.3,
+   "classes": {
+    "inverter_trip": {
+     "down_h": 62.873,
+     "lost_kwh": 11456.8,
+     "outage": true
+    },
+    "string_open": {
+     "down_h": 0.0,
+     "lost_kwh": 0.0,
+     "outage": true
+    },
+    "bypass_short": {
+     "down_h": 0.0,
+     "lost_kwh": 0.0,
+     "outage": false
+    },
+    "mppt_failure": {
+     "down_h": 0.0,
+     "lost_kwh": 0.0,
+     "outage": false
+    },
+    "partial_shading": {
+     "down_h": 27.9,
+     "lost_kwh": 669.1,
+     "outage": false
+    },
+    "soiling": {
+     "down_h": 0.0,
+     "lost_kwh": 0.0,
+     "outage": false
+    },
+    "snow": {
+     "down_h": 0.0,
+     "lost_kwh": 0.0,
+     "outage": true
+    },
+    "curtailment": {
+     "down_h": 0.0,
+     "lost_kwh": 0.0,
+     "outage": true
+    },
+    "grid_outage": {
+     "down_h": 0.0,
+     "lost_kwh": 0.0,
+     "outage": true
+    },
+    "comm_loss": {
+     "down_h": 115.155,
+     "lost_kwh": 0.0,
+     "outage": true
+    },
+    "frozen_data": {
+     "down_h": 0.0,
+     "lost_kwh": 0.0,
+     "outage": true
+    },
+    "sensor_fault": {
+     "down_h": 0.0,
+     "lost_kwh": 0.0,
+     "outage": false
+    }
+   }
+  }
+ },
+ "2018": {
+  "tool": {
+   "base_h": 3893.25,
+   "energy_kwh": 761879.2,
+   "classes": {
+    "inverter_trip": {
+     "down_h": 38.359,
+     "lost_kwh": 6025.1,
+     "outage": true
+    },
+    "string_open": {
+     "down_h": 0.0,
+     "lost_kwh": 0.0,
+     "outage": true
+    },
+    "bypass_short": {
+     "down_h": 0.0,
+     "lost_kwh": 0.0,
+     "outage": false
+    },
+    "mppt_failure": {
+     "down_h": 0.0,
+     "lost_kwh": 0.0,
+     "outage": false
+    },
+    "partial_shading": {
+     "down_h": 23.803,
+     "lost_kwh": 360.3,
+     "outage": false
+    },
+    "soiling": {
+     "down_h": 6.998,
+     "lost_kwh": 134.0,
+     "outage": false
+    },
+    "snow": {
+     "down_h": 0.924,
+     "lost_kwh": 20.1,
+     "outage": true
+    },
+    "curtailment": {
+     "down_h": 0.0,
+     "lost_kwh": 0.0,
+     "outage": true
+    },
+    "grid_outage": {
+     "down_h": 0.0,
+     "lost_kwh": 0.0,
+     "outage": true
+    },
+    "comm_loss": {
+     "down_h": 12.657,
+     "lost_kwh": 0.0,
+     "outage": true
+    },
+    "frozen_data": {
+     "down_h": 0.0,
+     "lost_kwh": 0.0,
+     "outage": true
+    },
+    "sensor_fault": {
+     "down_h": 0.0,
+     "lost_kwh": 0.0,
+     "outage": false
+    }
+   }
+  }
+ }
+}

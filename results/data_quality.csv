@@ -1,0 +1,13 @@
+plant,cls,n_truth,found,n_det,tp_det
+2023-s11,comm_loss,8,7,7,7
+2023-s11,frozen_data,5,5,5,5
+2023-s11,sensor_fault,2,0,1,0
+2023-s12,comm_loss,8,6,6,6
+2023-s12,frozen_data,5,3,3,3
+2023-s12,sensor_fault,2,0,1,0
+2024-s13,comm_loss,8,7,7,7
+2024-s13,frozen_data,5,3,3,3
+2024-s13,sensor_fault,2,0,1,0
+2024-s14,comm_loss,8,7,8,7
+2024-s14,frozen_data,5,3,3,3
+2024-s14,sensor_fault,2,0,1,0

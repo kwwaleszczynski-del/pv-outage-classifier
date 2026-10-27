@@ -1,0 +1,42 @@
+{
+ "theta": {
+  "expected": {
+   "plant": 0.3,
+   "inverter": 0.2,
+   "string": 0.2
+  },
+  "peer": {
+   "plant": 0.02,
+   "inverter": 0.06,
+   "string": 0.04
+  },
+  "hampel": {
+   "plant": 5.0,
+   "inverter": 3.0,
+   "string": 2.5
+  },
+  "cusum": {
+   "plant": 20.0,
+   "inverter": 40.0,
+   "string": 10.0
+  },
+  "iforest": {
+   "plant": 0.98,
+   "inverter": 0.95,
+   "string": 0.95
+  }
+ },
+ "rules_precision": {
+  "bypass_short": 0.127,
+  "comm_loss": 0.861,
+  "curtailment": 0.812,
+  "frozen_data": 1.0,
+  "grid_outage": 0.75,
+  "inverter_trip": 0.846,
+  "mppt_failure": 0.215,
+  "partial_shading": 0.537,
+  "snow": 0.802,
+  "soiling": 0.954,
+  "string_open": 0.861
+ }
+}

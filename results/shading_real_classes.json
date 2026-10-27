@@ -1,0 +1,49 @@
+{
+ "labelled": {
+  "partial_shading": 8,
+  "soiling": 7,
+  "inverter_trip": 3
+ },
+ "unlabelled": [
+  {
+   "device_id": "INV1",
+   "cls": "comm_loss",
+   "n": 5
+  },
+  {
+   "device_id": "INV1",
+   "cls": "curtailment",
+   "n": 1
+  },
+  {
+   "device_id": "INV1",
+   "cls": "partial_shading",
+   "n": 2
+  },
+  {
+   "device_id": "INV1",
+   "cls": "soiling",
+   "n": 47
+  },
+  {
+   "device_id": "INV2",
+   "cls": "comm_loss",
+   "n": 26
+  },
+  {
+   "device_id": "INV2",
+   "cls": "curtailment",
+   "n": 2
+  },
+  {
+   "device_id": "INV2",
+   "cls": "partial_shading",
+   "n": 47
+  },
+  {
+   "device_id": "INV2",
+   "cls": "soiling",
+   "n": 46
+  }
+ ]
+}

@@ -1,0 +1,564 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PV Outage Classifier</title>
+<meta name="description" content="Detecting, classifying and costing PV outages at plant, inverter and string level: a method comparison with availability KPIs.">
+<script src="https://cdn.plot.ly/plotly-2.35.2.min.js" charset="utf-8"
+  integrity="sha384-cCVCZkAjYNxaYKbM8lsArLznDF/SvMFr1jcZrvOpSTCa0W40ZAdLzHCEulnUa5i7" crossorigin="anonymous"></script>
+<script src="data.js"></script>
+<style>
+:root {
+  color-scheme: light;
+  --page: #f9f9f7; --surface: #fcfcfb; --ink: #0b0b0b; --ink2: #52514e; --muted: #898781;
+  --grid: #e1e0d9; --border: rgba(11,11,11,0.10); --accent: #2a78d6; --accent-soft: #9ec5f4;
+  --c-fault: #2a78d6; --c-environment: #eb6834; --c-external: #1baf7a; --c-data: #eda100; --c-fa: #52514e;
+  --seq0: #f4f8fd; --seq1: #9ec5f4; --seq2: #3987e5; --seq3: #184f95;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --page: #0d0d0d; --surface: #1a1a19; --ink: #f0efec; --ink2: #c3c2b7; --muted: #898781;
+    --grid: #2c2c2a; --border: rgba(255,255,255,0.10); --accent: #3987e5; --accent-soft: #256abf;
+    --c-fault: #3987e5; --c-environment: #d95926; --c-external: #199e70; --c-data: #c98500; --c-fa: #c3c2b7;
+    --seq0: #1d2633; --seq1: #1c5cab; --seq2: #3987e5; --seq3: #9ec5f4;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --page: #0d0d0d; --surface: #1a1a19; --ink: #f0efec; --ink2: #c3c2b7; --muted: #898781;
+  --grid: #2c2c2a; --border: rgba(255,255,255,0.10); --accent: #3987e5; --accent-soft: #256abf;
+  --c-fault: #3987e5; --c-environment: #d95926; --c-external: #199e70; --c-data: #c98500; --c-fa: #c3c2b7;
+  --seq0: #1d2633; --seq1: #1c5cab; --seq2: #3987e5; --seq3: #9ec5f4;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--page); color: var(--ink);
+  font: 15px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; }
+main { max-width: 1180px; margin: 0 auto; padding: 24px 16px 48px; }
+h1 { font-size: 26px; margin: 0 0 4px; }
+h2 { font-size: 18px; margin: 0 0 4px; }
+p { margin: 4px 0 12px; color: var(--ink2); }
+a { color: var(--accent); }
+.lead { max-width: 860px; }
+.meta { font-size: 13px; color: var(--muted); }
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin: 20px 0 8px; }
+.tile { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; }
+.tile .label { font-size: 13px; color: var(--ink2); }
+.tile .value { font-size: 28px; font-weight: 600; margin: 2px 0; }
+.tile .sub { font-size: 12px; color: var(--muted); }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(460px, 1fr)); gap: 16px; margin-top: 16px; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 14px 6px;
+  min-width: 0; }
+.card.wide { grid-column: 1 / -1; }
+.chart { width: 100%; height: 340px; }
+.chart.tall { height: 460px; }
+h2.section { margin: 36px 0 0; font-size: 20px; }
+.controls { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 6px 0 8px; font-size: 13px;
+  color: var(--ink2); }
+.seg { display: inline-flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+.seg button { background: transparent; color: var(--ink2); border: 0; padding: 4px 10px; font: inherit; cursor: pointer; }
+.seg button.on { background: var(--accent); color: #fff; }
+select { background: var(--surface); color: var(--ink); border: 1px solid var(--border); border-radius: 6px;
+  padding: 3px 6px; font: inherit; }
+.table-wrap { overflow-x: auto; max-height: 420px; overflow-y: auto; }
+table { border-collapse: collapse; font-size: 13px; font-variant-numeric: tabular-nums; width: 100%; }
+th, td { padding: 4px 8px; border-bottom: 1px solid var(--grid); text-align: right; white-space: nowrap; }
+thead th { color: var(--ink2); font-weight: 600; position: sticky; top: 0; background: var(--surface); }
+td.l, th.l { text-align: left; }
+.dot { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 6px; vertical-align: -1px; }
+.calc { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 16px; }
+.calc table td select { font-size: 12px; }
+.big { font-size: 30px; font-weight: 600; }
+.cmp { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin: 8px 0; }
+.cmp .tile .value { font-size: 24px; }
+.note { font-size: 12px; color: var(--muted); }
+footer { margin-top: 32px; font-size: 13px; color: var(--muted); }
+@media (max-width: 760px) { .calc { grid-template-columns: 1fr; } }
+@media (max-width: 520px) { .grid { grid-template-columns: 1fr; } .chart { height: 300px; } .cmp { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<main>
+<h1>PV outage classifier</h1>
+<p class="lead">Finding, explaining and costing outages and faults of a PV plant at plant, inverter and string
+level. Seven detection methods are compared on simulated plants with known truth (a 1.25 MWp plant, 10 inverters
+x 12 strings, real ERA5 weather from central Poland, 12 kinds of injected events), causes are assigned by signature
+rules and by gradient boosting, and the result feeds availability KPIs. A second part runs the same tool on five
+real inverters from NREL PVDAQ.</p>
+<p class="meta">Source code, method and data sources: <a href="https://github.com/kwwaleszczynski-del/pv-outage-classifier">github.com/kwwaleszczynski-del/pv-outage-classifier</a>. Synthetic results are on 4 test plant-years that were never used for tuning.</p>
+
+<div class="tiles" id="tiles"></div>
+
+<h2 class="section">1. Event overview: one simulated test plant-year</h2>
+<p>Every bar is an event: on the plant row when it is plant-wide, on an inverter row for the inverter and its
+strings. Colour = category. Switch between the truth and what the tool found (hybrid detector + signature rules);
+crosses are the tool's false alarms. Hover for details.</p>
+<div class="grid">
+  <div class="card wide">
+    <div class="controls"><span>Show</span>
+      <span class="seg" id="tl-mode"><button data-v="truth" class="on">Truth</button><button data-v="tool">Tool</button><button data-v="both">Both</button></span>
+      <span id="tl-legend"></span>
+    </div>
+    <div id="timeline" class="chart tall"></div>
+  </div>
+  <div class="card wide">
+    <div class="controls"><span>Inverter</span><select id="daily-inv"></select>
+      <span class="note">daily energy against the peer reference (median of the other inverters, scaled)</span></div>
+    <div id="daily" class="chart"></div>
+  </div>
+  <div class="card wide">
+    <div class="controls"><span>Events of the tool, cause</span><select id="ev-filter"></select>
+      <span class="note" id="ev-count"></span></div>
+    <div class="table-wrap"><table id="ev-table"></table></div>
+  </div>
+</div>
+
+<h2 class="section">2. Which detector finds what</h2>
+<p>Event-level scores against the truth, over all production-loss events of the four test plant-years. A detection
+is a hit when most of its flagged steps fall where the truth says that device was affected. Thresholds per level
+were tuned on four other plant-years.</p>
+<div class="grid">
+  <div class="card">
+    <div class="controls"><span>Metric</span>
+      <span class="seg" id="m-metric"><button data-v="f1" class="on">F1</button><button data-v="precision">Precision</button><button data-v="recall">Recall</button></span></div>
+    <div id="methods" class="chart"></div>
+  </div>
+  <div class="card">
+    <div class="controls"><span>Per method</span>
+      <span class="seg" id="m-other"><button data-v="fa" class="on">False alarms / device-year</button><button data-v="energy">Energy error</button><button data-v="kpi">Availability error</button></span></div>
+    <div id="methods2" class="chart"></div>
+  </div>
+  <div class="card wide">
+    <div class="controls"><span>By cause</span>
+      <span class="seg" id="h-metric"><button data-v="recall" class="on">Share found</button><button data-v="delay">Median delay [daylight h]</button></span></div>
+    <div id="heat" class="chart"></div>
+  </div>
+  <div class="card wide">
+    <div class="table-wrap"><table id="m-table"></table></div>
+  </div>
+  <div class="card wide" id="sens-card">
+    <h2>Shortest event kept</h2>
+    <p class="note">The same test plants and thresholds, with events required to last longer. A check of one setting
+    after the fact, not a re-tuning: the benchmark above keeps 30 minutes.</p>
+    <div class="table-wrap"><table id="sens-table"></table></div>
+  </div>
+</div>
+
+<h2 class="section">3. Why it happened: rules against gradient boosting</h2>
+<p>Both classifiers get the same event signature (zero share, depth against siblings and the expected model,
+voltage against siblings and against its own normal, MPPT twin, sun-position recurrence, share of the day,
+plant-wide share, module temperature, irradiance-sensor checks, status codes). <b>Perfect segmentation</b>: the
+true event windows. <b>Pipeline</b>: what the hybrid detector actually found (hits only).</p>
+<div class="grid">
+  <div class="card wide">
+    <div class="controls">
+      <span class="seg" id="cm-src"><button data-v="oracle" class="on">Perfect segmentation</button><button data-v="pipeline">Pipeline</button></span>
+      <span class="seg" id="cm-model"><button data-v="rules" class="on">Rules</button><button data-v="gbm">Gradient boosting</button></span>
+      <span id="cm-acc" class="note"></span></div>
+    <div id="confusion" class="chart tall"></div>
+  </div>
+</div>
+
+<h2 class="section">4. Availability calculator</h2>
+<p>Contracts differ in what counts against the plant. Choose how each cause is treated and compare the tool's
+availability with the truth. <b>Unavailable</b>: the capacity counts as down (outage causes only) and its lost
+energy counts against the plant. <b>Excluded</b>: the period leaves the denominator (outside the operator's
+responsibility, unknown state). <b>Available</b>: the loss is a performance issue, not unavailability. The defaults
+follow the spirit of IEC 61724-1 and IEC TS 63019; the exact definitions need checking against the current
+editions and the contract.</p>
+<div class="card">
+  <div class="controls"><span>Data</span><select id="calc-ds"></select>
+    <button id="calc-reset" style="font:inherit;border:1px solid var(--border);background:transparent;color:var(--ink2);border-radius:6px;padding:3px 8px;cursor:pointer">Defaults</button></div>
+  <div class="calc">
+    <div class="table-wrap" style="max-height:none"><table id="calc-table"></table></div>
+    <div>
+      <div class="cmp" id="calc-out"></div>
+      <div id="calc-chart" class="chart" style="height:280px"></div>
+      <p class="note">Classes are added up here, so overlapping events of different causes are counted twice (rare:
+      the full computation in <code>kpi.availability</code> takes the maximum per step).</p>
+    </div>
+  </div>
+</div>
+
+<h2 class="section">5. Real data: five inverters of NREL PVDAQ (Las Vegas, 2016-2018)</h2>
+<p>No fault log exists, so precision cannot be measured here. What can: how often each method alarms outside the
+plain outages (an inverter at zero for at least two hours in sun while a neighbour produces), and whether it
+finds those outages. The bars use the thresholds tuned on the synthetic plants, which assume identical
+inverters; these five sit on different roofs, and broken clouds reach them at different times. The sweep shows
+what a site set-up does: the KPIs below use the lowest peer threshold that finds every plain outage at no more
+than one other alarm per inverter-month, with events of at least 2 h (chosen without any fault labels).</p>
+<div class="grid">
+  <div class="card"><div id="real-alarms" class="chart"></div></div>
+  <div class="card"><div class="table-wrap"><table id="real-kpi"></table></div>
+    <p class="note">Per year, with the site set-up and the default treatment: availability and lost energy (MWh)
+    as the tool sees it.</p></div>
+  <div class="card wide">
+    <div class="controls"><span>Threshold sweep, method</span><select id="sweep-m"></select>
+      <span class="note">other alarms per inverter-year (log scale); labels: plain outages found</span></div>
+    <div id="real-sweep" class="chart"></div></div>
+  <div class="card wide"><div id="real-heat" class="chart"></div></div>
+  <div class="card wide">
+    <div class="controls"><span>Tool events on the real fleet, cause</span><select id="real-filter"></select><span class="note" id="real-count"></span></div>
+    <div class="table-wrap"><table id="real-table"></table></div></div>
+</div>
+
+<section id="shading-section">
+<h2 class="section">6. Real, labelled shading: twin inverters on La Réunion</h2>
+<p>A 4 kW rooftop with two identical inverters; inverter 1 was shaded on purpose on 23 days in 2022 and labelled,
+inverter 2 was not. With only one twin as the reference, every method trades shaded days found against alarms
+outside the labels. Many of those alarms are on inverter 2, on afternoons from March to September, at the same
+sun position day after day: the reference inverter most likely has an obstruction of its own that the dataset
+does not label (the classifier calls 47 of them partial shading).</p>
+<div class="grid">
+  <div class="card"><div id="sh-sweep" class="chart"></div></div>
+  <div class="card"><div id="sh-daily" class="chart"></div></div>
+  <div class="card wide"><div class="table-wrap"><table id="sh-table"></table></div></div>
+</div>
+</section>
+
+<footer>
+Labelled shading: PV Array Fault Dataset, Zenodo record 23114394 (real records only), built on Graillet et al. (2022),
+<a href="https://doi.org/10.5281/zenodo.7828879">doi:10.5281/zenodo.7828879</a>, both CC BY 4.0.
+Weather: ERA5 (Copernicus Climate Change Service) via the Open-Meteo archive API, CC BY 4.0. Real data: NREL PVDAQ,
+<a href="https://doi.org/10.25984/1846021">doi:10.25984/1846021</a>, CC BY 4.0. Simulation with
+<a href="https://pvlib-python.readthedocs.io">pvlib</a> (CEC module database, Kimber soiling, NREL snow model).
+All results are research material, not an assessment of any real plant's contract availability.
+</footer>
+</main>
+<script>
+const D = window.DATA;
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const CAT = ["fault", "environment", "external", "data"];
+const catColor = c => css("--c-" + c);
+const fmt = (v, d = 2) => v === null || v === undefined || Number.isNaN(v) ? "–" : Number(v).toFixed(d);
+const pct = (v, d = 0) => v === null || v === undefined ? "–" : (100 * v).toFixed(d) + " %";
+const cname = c => D.class_names[c] || c;
+const esc = s => String(s ?? "").replace(/[&<>"]/g, ch => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;"}[ch]));
+
+function baseLayout(extra = {}) {
+  return Object.assign({
+    paper_bgcolor: "rgba(0,0,0,0)", plot_bgcolor: "rgba(0,0,0,0)",
+    font: {family: "system-ui, -apple-system, Segoe UI, sans-serif", size: 12, color: css("--ink2")},
+    margin: {l: 60, r: 16, t: 10, b: 40},
+    xaxis: {gridcolor: css("--grid"), zerolinecolor: css("--grid"), linecolor: css("--grid")},
+    yaxis: {gridcolor: css("--grid"), zerolinecolor: css("--grid"), linecolor: css("--grid")},
+    hoverlabel: {bgcolor: css("--surface"), bordercolor: css("--border"), font: {color: css("--ink")}},
+    legend: {orientation: "h", y: 1.12, x: 0},
+  }, extra);
+}
+const CONF = {displayModeBar: false, responsive: true};
+
+function seg(id, cb) {
+  const el = document.getElementById(id);
+  el.querySelectorAll("button").forEach(b => b.addEventListener("click", () => {
+    el.querySelectorAll("button").forEach(x => x.classList.toggle("on", x === b));
+    cb(b.dataset.v);
+  }));
+  return () => el.querySelector("button.on").dataset.v;
+}
+
+// ------------------------------------------------------------------ tiles
+function tiles() {
+  const m = Object.fromEntries(D.methods.map(x => [x.id, x]));
+  const best = D.methods.filter(x => x.id !== "hybrid").reduce((a, b) => (b.f1 > a.f1 ? b : a));
+  const h = m.hybrid;
+  const items = [
+    ["Hybrid detector (tool)", fmt(h.f1), `F1; precision ${fmt(h.precision)}, recall ${fmt(h.recall)}`],
+    ["Best single method", fmt(best.f1), `F1, ${best.name}`],
+    ["Cause right (rules)", pct(D.confusion.oracle.rules.accuracy), `perfect segmentation; gradient boosting ${pct(D.confusion.oracle.gbm.accuracy)}`],
+    ["Availability error (tool)", fmt(h.kpi_time_pp) + " pp", `mean |error|, time-based; energy-based ${fmt(h.kpi_energy_pp)} pp`],
+  ];
+  if (D.real && D.real.site && D.real.sweep) {
+    const r = D.real.sweep.find(x => x.method === "peer" && x.min_hours === D.real.site.min_hours && Math.abs(x.theta - D.real.site.peer_inverter) < 1e-9);
+    if (r) items.push(["Real fleet (PVDAQ), site set-up", fmt(r.other_per_device_year, 1), `other alarms per inverter-year (peer ${D.real.site.peer_inverter}, events ≥ ${D.real.site.min_hours} h); ${r.plain_found} of ${r.plain_outages} plain outages found`]);
+  }
+  if (D.shading) {
+    const p = D.shading.results.find(x => x.method === "peer");
+    if (p) items.push(["Real labelled shading", `${p.events_found}/${p.events}`, `shaded days found by peer comparison of twin inverters`]);
+  }
+  document.getElementById("tiles").innerHTML = items.map(([l, v, s]) =>
+    `<div class="tile"><div class="label">${l}</div><div class="value">${v}</div><div class="sub">${s}</div></div>`).join("");
+}
+
+// ------------------------------------------------------------------ timeline
+const rowOf = d => String(d).split("-")[0];
+function timeline(mode) {
+  const ex = D.example;
+  const rows = [...new Set([...ex.truth.map(e => rowOf(e.device_id)), ...ex.events.map(e => rowOf(e.device_id))])]
+    .sort((a, b) => (a === "PLANT" ? -1 : b === "PLANT" ? 1 : a.localeCompare(b)));
+  const traces = [];
+  const add = (list, getCat, who, offset) => {
+    for (const cat of CAT) {
+      const ev = list.filter(e => getCat(e) === cat);
+      if (!ev.length) continue;
+      traces.push({
+        type: "bar", orientation: "h", name: `${who}: ${cat}`, legendgroup: cat, showlegend: false,
+        y: ev.map(e => rowOf(e.device_id)), base: ev.map(e => e.start),
+        x: ev.map(e => Math.max(new Date(e.end) - new Date(e.start), 3 * 3600e3)),
+        offsetgroup: who, marker: {color: catColor(cat), opacity: who === "truth" && mode === "both" ? 0.55 : 1},
+        width: mode === "both" ? 0.4 : 0.7, offset: mode === "both" ? offset : undefined,
+        customdata: ev.map(e => [cname(e.cls || e.cls_rules), e.device_id, e.start.slice(0, 16), e.end.slice(0, 16),
+          who === "truth" ? fmt(e.true_loss_kwh, 0) : fmt(e.loss_kwh, 0), who === "truth" ? (e.note || "") : ("truth: " + cname(e.true_cls))]),
+        hovertemplate: `<b>%{customdata[0]}</b> (${who})<br>%{customdata[1]}<br>%{customdata[2]} – %{customdata[3]}<br>lost %{customdata[4]} kWh<br>%{customdata[5]}<extra></extra>`,
+      });
+    }
+  };
+  if (mode !== "tool") add(ex.truth, e => e.category, "truth", -0.4);
+  if (mode !== "truth") add(ex.events.filter(e => e.true_cls !== "false_alarm"), e => D.category[e.cls_rules], "tool", 0);
+  if (mode !== "truth") {
+    const fa = ex.events.filter(e => e.true_cls === "false_alarm");
+    traces.push({type: "scatter", mode: "markers", name: "false alarm", y: fa.map(e => rowOf(e.device_id)),
+      x: fa.map(e => e.start), marker: {symbol: "x", size: 7, color: css("--c-fa")},
+      customdata: fa.map(e => [cname(e.cls_rules), e.device_id, e.start.slice(0, 16), fmt(e.hours, 1)]),
+      hovertemplate: "<b>false alarm</b>, classified %{customdata[0]}<br>%{customdata[1]}, %{customdata[2]}, %{customdata[3]} h<extra></extra>"});
+  }
+  Plotly.react("timeline", traces, baseLayout({barmode: "overlay", showlegend: false,
+    yaxis: {categoryorder: "array", categoryarray: rows.slice().reverse(), gridcolor: css("--grid")},
+    xaxis: {type: "date", gridcolor: css("--grid")}, margin: {l: 60, r: 10, t: 6, b: 30}}), CONF);
+  document.getElementById("tl-legend").innerHTML = CAT.map(c => `<span><span class="dot" style="background:${catColor(c)}"></span>${c}</span>`).join(" &nbsp;");
+}
+
+function daily(inv) {
+  const d = D.example.daily;
+  Plotly.react("daily", [
+    {type: "scatter", mode: "lines", name: "peer reference", x: d.dates, y: d.peer[inv], line: {color: css("--muted"), width: 2}},
+    {type: "scatter", mode: "lines", name: inv, x: d.dates, y: d.actual[inv], line: {color: css("--accent"), width: 2}},
+  ], baseLayout({yaxis: {title: "kWh / day", gridcolor: css("--grid")}, hovermode: "x unified", margin: {l: 60, r: 10, t: 30, b: 30}}), CONF);
+}
+
+function evTable(cls) {
+  const list = D.example.events.filter(e => cls === "all" || e.cls_rules === cls);
+  document.getElementById("ev-count").textContent = `${list.length} events`;
+  document.getElementById("ev-table").innerHTML = "<thead><tr><th class='l'>start (UTC)</th><th class='l'>device</th><th class='l'>cause (rules)</th><th class='l'>cause (boosting)</th><th class='l'>truth</th><th>flagged h</th><th>lost kWh</th></tr></thead><tbody>" +
+    list.slice(0, 400).map(e => `<tr><td class='l'>${esc(e.start.slice(0, 16))}</td><td class='l'>${esc(e.device_id)}</td><td class='l'><span class="dot" style="background:${catColor(D.category[e.cls_rules])}"></span>${esc(cname(e.cls_rules))}</td><td class='l'>${esc(cname(e.cls_gbm))}</td><td class='l'>${esc(e.true_cls === "false_alarm" ? "false alarm" : cname(e.true_cls))}</td><td>${fmt(e.hours, 2)}</td><td>${fmt(e.loss_kwh, 1)}</td></tr>`).join("") + "</tbody>";
+}
+
+// ------------------------------------------------------------------ methods
+function methods(metric) {
+  const ms = D.methods;
+  Plotly.react("methods", [{type: "bar", orientation: "h", y: ms.map(m => m.name), x: ms.map(m => m[metric]),
+    marker: {color: ms.map(m => m.id === "hybrid" ? css("--seq3") : css("--accent"))},
+    text: ms.map(m => fmt(m[metric])), textposition: "outside", cliponaxis: false,
+    hovertemplate: "%{y}: %{x:.2f}<extra></extra>"}],
+    baseLayout({xaxis: {range: [0, 1.1], gridcolor: css("--grid")}, yaxis: {autorange: "reversed"}, margin: {l: 170, r: 30, t: 10, b: 30}}), CONF);
+}
+function methods2(kind) {
+  const ms = D.methods;
+  let traces, xt;
+  if (kind === "fa") {
+    traces = [["string", "--seq1"], ["inverter", "--seq2"], ["plant", "--seq3"]].map(([lv, c]) => ({
+      type: "bar", orientation: "h", name: lv, y: ms.map(m => m.name), x: ms.map(m => m["fa_per_dev_year_" + lv]),
+      marker: {color: css(c)}, hovertemplate: `%{y}, ${lv}: %{x:.2f} per device-year<extra></extra>`}));
+    xt = "false alarms per device-year";
+  } else if (kind === "energy") {
+    traces = [{type: "bar", orientation: "h", name: "median |error|", y: ms.map(m => m.name), x: ms.map(m => 100 * m.energy_rel_err_median),
+      marker: {color: css("--accent")}, hovertemplate: "%{y}: %{x:.0f} % median error per event<extra></extra>"}];
+    xt = "lost energy per found event: median |relative error| [%]";
+  } else {
+    traces = [["kpi_time_pp", "time", "--seq2"], ["kpi_energy_pp", "energy", "--seq1"]].map(([k, n, c]) => ({
+      type: "bar", orientation: "h", name: n + "-based", y: ms.map(m => m.name), x: ms.map(m => m[k]),
+      marker: {color: css(c)}, hovertemplate: `%{y}: %{x:.2f} pp<extra></extra>`}));
+    xt = "availability: mean |error| [pp] (rules for the cause)";
+  }
+  Plotly.react("methods2", traces, baseLayout({barmode: "group", xaxis: {title: xt, gridcolor: css("--grid")},
+    yaxis: {autorange: "reversed"}, margin: {l: 170, r: 20, t: 30, b: 45}}), CONF);
+}
+function heat(kind) {
+  const ms = D.methods.map(m => m.id);
+  const src = kind === "recall" ? D.recall : D.delay;
+  const z = ms.map(m => D.loss_classes.map(c => (src[m] || {})[c]));
+  Plotly.react("heat", [{type: "heatmap", x: D.loss_classes.map(cname), y: D.methods.map(m => m.name), z,
+    colorscale: [[0, css("--seq0")], [0.5, css("--seq1")], [1, css("--seq3")]], reversescale: kind === "delay",
+    zmin: 0, zmax: kind === "recall" ? 1 : 24,
+    text: z.map(r => r.map(v => v === null ? "" : kind === "recall" ? Math.round(100 * v) + "%" : v.toFixed(1))),
+    texttemplate: "%{text}", hovertemplate: "%{y}<br>%{x}: %{text}<extra></extra>", showscale: false, xgap: 2, ygap: 2}],
+    baseLayout({margin: {l: 170, r: 10, t: 10, b: 70}, yaxis: {autorange: "reversed"}}), CONF);
+}
+function mTable() {
+  const rows = D.methods.map(m => `<tr><td class='l'>${m.name}</td><td>${m.n_det}</td><td>${fmt(m.precision)}</td><td>${m.found}/${m.n_truth}</td><td>${fmt(m.delay_h_median, 1)}</td><td>${pct(m.duration_rel_err_median)}</td><td>${pct(m.energy_rel_err_median)}</td><td>${pct(m.energy_bias_total)}</td><td>${m.fa_clipping}</td><td>${m.fa_sensor}</td><td>${m.fa_other}</td></tr>`).join("");
+  document.getElementById("m-table").innerHTML = "<thead><tr><th class='l'>method</th><th>detections</th><th>precision</th><th>events found</th><th>median delay [daylight h]</th><th>duration |error|</th><th>energy |error|</th><th>energy bias</th><th>FA: clipping</th><th>FA: sensor</th><th>FA: other</th></tr></thead><tbody>" + rows + "</tbody>";
+}
+
+function sensTable() {
+  if (!D.sensitivity) { document.getElementById("sens-card").style.display = "none"; return; }
+  const hs = [...new Set(D.sensitivity.map(r => r.min_hours))].sort((a, b) => a - b);
+  const get = (m, h) => D.sensitivity.find(r => r.method === m && r.min_hours === h) || {};
+  const head = "<thead><tr><th class='l'>method</th>" + hs.map(h => `<th>P / R / F1, ≥ ${h} h</th>`).join("") + hs.map(h => `<th>FA / device-year, ≥ ${h} h</th>`).join("") + "</tr></thead>";
+  document.getElementById("sens-table").innerHTML = head + "<tbody>" + D.methods.map(m =>
+    `<tr><td class='l'>${m.name}</td>` + hs.map(h => { const r = get(m.id, h); return `<td>${fmt(r.precision)} / ${fmt(r.recall)} / <b>${fmt(r.f1)}</b></td>`; }).join("") +
+    hs.map(h => `<td>${fmt(get(m.id, h).fa_per_dev_year, 2)}</td>`).join("") + "</tr>").join("") + "</tbody>";
+}
+
+// ------------------------------------------------------------------ confusion
+function confusion() {
+  const src = document.querySelector("#cm-src .on").dataset.v, model = document.querySelector("#cm-model .on").dataset.v;
+  const c = D.confusion[src][model];
+  const cls = D.classes;
+  const keep = cls.map((k, i) => c.matrix[i].reduce((a, b) => a + b, 0) > 0 || c.matrix.some(r => r[i] > 0));
+  const idx = cls.map((k, i) => i).filter(i => keep[i]);
+  const z = idx.map(i => { const s = c.matrix[i].reduce((a, b) => a + b, 0) || 1; return idx.map(j => c.matrix[i][j] / s); });
+  const n = idx.map(i => idx.map(j => c.matrix[i][j]));
+  Plotly.react("confusion", [{type: "heatmap", x: idx.map(i => cname(cls[i])), y: idx.map(i => cname(cls[i])), z,
+    colorscale: [[0, css("--seq0")], [0.5, css("--seq1")], [1, css("--seq3")]], zmin: 0, zmax: 1, showscale: false,
+    text: n.map(r => r.map(v => v ? String(v) : "")), texttemplate: "%{text}", customdata: n, xgap: 2, ygap: 2,
+    hovertemplate: "true %{y}<br>predicted %{x}<br>%{customdata} events (%{z:.0%} of row)<extra></extra>"}],
+    baseLayout({margin: {l: 150, r: 10, t: 10, b: 110}, yaxis: {autorange: "reversed", title: "true cause"}, xaxis: {title: "predicted", tickangle: -35}}), CONF);
+  document.getElementById("cm-acc").textContent = `accuracy ${pct(c.accuracy)}`;
+}
+
+// ------------------------------------------------------------------ calculator
+const DEFAULT_T = {inverter_trip: "unavailable", string_open: "unavailable", bypass_short: "available", mppt_failure: "available",
+  partial_shading: "available", soiling: "available", snow: "available", curtailment: "excluded", grid_outage: "excluded",
+  comm_loss: "excluded", frozen_data: "excluded", sensor_fault: "available"};
+let treat = Object.assign({}, DEFAULT_T);
+function calcDatasets() {
+  const ds = [];
+  for (const [k, v] of Object.entries(D.calculator || {})) ds.push({id: "syn:" + k, name: `Simulated plant ${k}`, tool: v.tool, truth: v.truth});
+  for (const [k, v] of Object.entries((D.real && D.real.calculator) || {})) ds.push({id: "real:" + k, name: `PVDAQ fleet ${k}`, tool: v.tool, truth: null});
+  return ds;
+}
+function avail(d) {
+  if (!d) return null;
+  let down = 0, excl = 0, lostU = 0, lostX = 0, lostAll = 0;
+  const cat = {fault: 0, environment: 0, external: 0, data: 0};
+  for (const [c, v] of Object.entries(d.classes)) {
+    const t = treat[c];
+    if (t === "unavailable" && v.outage) down += v.down_h;
+    if (t === "excluded") excl += v.down_h;
+    if (t === "unavailable") lostU += v.lost_kwh;
+    if (t === "excluded") lostX += v.lost_kwh;
+    lostAll += v.lost_kwh; cat[D.category[c]] += v.lost_kwh;
+  }
+  const pot = d.energy_kwh + lostAll;
+  return {time: 1 - down / (d.base_h - excl), energy: 1 - lostU / (pot - lostX), cat};
+}
+function calc() {
+  const ds = calcDatasets().find(x => x.id === document.getElementById("calc-ds").value);
+  if (!ds) return;
+  document.getElementById("calc-table").innerHTML = "<thead><tr><th class='l'>cause</th><th class='l'>treatment</th><th>tool: down h</th><th>tool: MWh</th>" + (ds.truth ? "<th>truth: MWh</th>" : "") + "</tr></thead><tbody>" +
+    D.classes.map(c => `<tr><td class='l'><span class="dot" style="background:${catColor(D.category[c])}"></span>${cname(c)}</td><td class='l'><select data-c="${c}">${["unavailable", "excluded", "available"].map(o => `<option${treat[c] === o ? " selected" : ""}>${o}</option>`).join("")}</select></td><td>${fmt(ds.tool.classes[c].down_h, 0)}</td><td>${fmt(ds.tool.classes[c].lost_kwh / 1000, 1)}</td>${ds.truth ? `<td>${fmt(ds.truth.classes[c].lost_kwh / 1000, 1)}</td>` : ""}</tr>`).join("") + "</tbody>";
+  document.querySelectorAll("#calc-table select").forEach(s => s.addEventListener("change", () => { treat[s.dataset.c] = s.value; calc(); }));
+  const a = avail(ds.tool), b = avail(ds.truth);
+  const tile = (l, v, s) => `<div class="tile"><div class="label">${l}</div><div class="value">${v}</div><div class="sub">${s}</div></div>`;
+  document.getElementById("calc-out").innerHTML =
+    tile("Time-based availability", pct(a.time, 2), b ? `truth ${pct(b.time, 2)}, error ${fmt(100 * (a.time - b.time), 2)} pp` : "tool") +
+    tile("Energy-based availability", pct(a.energy, 2), b ? `truth ${pct(b.energy, 2)}, error ${fmt(100 * (a.energy - b.energy), 2)} pp` : "tool");
+  const traces = [{type: "bar", name: "tool", x: CAT, y: CAT.map(k => a.cat[k] / 1000), marker: {color: CAT.map(catColor)},
+    hovertemplate: "%{x}: %{y:.1f} MWh (tool)<extra></extra>"}];
+  if (b) traces.push({type: "bar", name: "truth", x: CAT, y: CAT.map(k => b.cat[k] / 1000),
+    marker: {color: "rgba(0,0,0,0)", line: {color: css("--ink2"), width: 1.5}}, hovertemplate: "%{x}: %{y:.1f} MWh (truth)<extra></extra>"});
+  Plotly.react("calc-chart", traces, baseLayout({barmode: "group", yaxis: {title: "lost energy [MWh]", gridcolor: css("--grid")},
+    margin: {l: 60, r: 10, t: 30, b: 30}}), CONF);
+}
+
+// ------------------------------------------------------------------ real data
+function real() {
+  const R = D.real;
+  if (!R) return;
+  const ord = D.methods.map(m => m.id).filter(id => R.alarms.some(a => a.method === id));
+  const al = ord.map(id => R.alarms.find(a => a.method === id));
+  const names = Object.fromEntries(D.methods.map(m => [m.id, m.name]));
+  Plotly.react("real-alarms", [{type: "bar", orientation: "h", y: al.map(a => names[a.method]), x: al.map(a => a.other_per_device_year),
+    marker: {color: al.map(a => a.method === "hybrid" ? css("--seq3") : css("--accent"))},
+    text: al.map(a => `${a.other_per_device_year.toFixed(1)} (${a.plain_found}/${a.plain_outages})`), textposition: "outside", cliponaxis: false,
+    hovertemplate: "%{y}<br>%{x:.1f} other alarms per inverter-year<extra></extra>"}],
+    baseLayout({yaxis: {autorange: "reversed"}, xaxis: {title: "alarms per inverter-year outside plain outages (found / plain outages)", gridcolor: css("--grid")}, margin: {l: 170, r: 60, t: 10, b: 45}}), CONF);
+  document.getElementById("real-kpi").innerHTML = "<thead><tr><th class='l'>year</th><th>A<sub>t</sub></th><th>A<sub>E</sub></th><th>MWh</th><th>fault</th><th>env.</th><th>events</th></tr></thead><tbody>" +
+    R.kpi_by_year.map(k => `<tr><td class='l'>${k.year}</td><td>${pct(k.availability_time, 2)}</td><td>${pct(k.availability_energy, 2)}</td><td>${fmt(k.energy_mwh, 0)}</td><td>${fmt(k.lost_fault_mwh, 1)}</td><td>${fmt(k.lost_environment_mwh, 1)}</td><td>${k.events}</td></tr>`).join("") + "</tbody>";
+  const units = Object.keys(R.daily.ratio);
+  Plotly.react("real-heat", [{type: "heatmap", x: R.daily.dates, y: units, z: units.map(u => R.daily.ratio[u]), zmin: 0, zmax: 1.2,
+    colorscale: [[0, "#e34948"], [0.5, "#f6d4d4"], [0.8, css("--seq0")], [1, css("--seq1")]], showscale: false,
+    hovertemplate: "%{y} %{x}: %{z:.2f} of the peer reference<extra></extra>"}],
+    baseLayout({margin: {l: 40, r: 10, t: 30, b: 30}, title: {text: "Daily energy / peer reference (red = shortfall)", font: {size: 13}, x: 0}}), CONF);
+  realTable("all");
+}
+function realSweep(m) {
+  const R = D.real;
+  if (!R || !R.sweep) return;
+  const traces = [0.5, 2].map((h, k) => {
+    const pts = R.sweep.filter(r => r.method === m && r.min_hours === h);
+    return {type: "scatter", mode: "lines+markers+text", name: `events >= ${h} h`, x: pts.map(r => r.theta),
+      y: pts.map(r => Math.max(r.other_per_device_year, 0.1)), text: pts.map(r => `${r.plain_found}/${r.plain_outages}`),
+      textposition: "top center", textfont: {size: 10, color: css("--muted")},
+      line: {color: k ? css("--seq3") : css("--seq1"), width: 2}, marker: {size: 7},
+      hovertemplate: `threshold %{x}<br>%{y:.1f} other alarms per inverter-year<br>plain outages found %{text}<extra>events >= ${h} h</extra>`};
+  });
+  const site = R.site && m === "peer" ? [{type: "line", x0: R.site.peer_inverter, x1: R.site.peer_inverter, yref: "paper", y0: 0, y1: 1, line: {dash: "dot", color: css("--ink2")}}] : [];
+  Plotly.react("real-sweep", traces, baseLayout({yaxis: {type: "log", title: "other alarms / inverter-year", gridcolor: css("--grid")},
+    xaxis: {title: m === "iforest" ? "quantile" : "threshold", gridcolor: css("--grid")}, shapes: site, margin: {l: 60, r: 10, t: 30, b: 45}}), CONF);
+}
+function shading() {
+  const S = D.shading;
+  if (!S) { document.getElementById("shading-section").style.display = "none"; return; }
+  const cols = {expected: css("--c-fault"), peer: css("--c-environment"), hampel: css("--c-external"), cusum: css("--c-data"), iforest: css("--muted")};
+  const names = Object.fromEntries(D.methods.map(m => [m.id, m.name]));
+  const n = S.results[0].events;
+  const traces = Object.keys(cols).map(m => {
+    const pts = S.sweep.filter(r => r.method === m).sort((a, b) => a.fa_per_inverter_year - b.fa_per_inverter_year);
+    return {type: "scatter", mode: "lines+markers", name: names[m], x: pts.map(r => Math.max(r.fa_per_inverter_year, 0.1)), y: pts.map(r => r.found),
+      line: {color: cols[m], width: 2}, marker: {size: pts.map(r => r.calibrated ? 12 : 6), symbol: pts.map(r => r.calibrated ? "circle-open" : "circle")},
+      customdata: pts.map(r => r.theta), hovertemplate: `${names[m]}<br>threshold %{customdata}<br>%{y} of ${n} days found, %{x:.1f} alarms / inverter-year<extra></extra>`};
+  });
+  Plotly.react("sh-sweep", traces, baseLayout({xaxis: {type: "log", title: "alarms outside the labels per inverter-year", gridcolor: css("--grid")},
+    yaxis: {title: `shaded days found (of ${n})`, gridcolor: css("--grid")}, margin: {l: 55, r: 10, t: 40, b: 45}}), CONF);
+  const d = S.daily, sh = d.shaded.map(Boolean);
+  Plotly.react("sh-daily", [
+    {type: "scatter", mode: "markers", name: "normal day", x: d.dates.filter((_, i) => !sh[i]), y: d.ratio.filter((_, i) => !sh[i]), marker: {size: 4, color: css("--muted")}},
+    {type: "scatter", mode: "markers", name: "labelled shading", x: d.dates.filter((_, i) => sh[i]), y: d.ratio.filter((_, i) => sh[i]), marker: {size: 8, color: css("--c-environment")}},
+  ], baseLayout({yaxis: {title: "daily energy inverter 1 / inverter 2", range: [0.3, 1.2], gridcolor: css("--grid")}, margin: {l: 55, r: 10, t: 40, b: 30}}), CONF);
+  document.getElementById("sh-table").innerHTML = "<thead><tr><th class='l'>method</th><th>shaded days found</th><th>alarms outside labels</th><th>per inverter-year</th><th>shaded steps flagged</th><th>other steps flagged</th></tr></thead><tbody>" +
+    S.results.map(r => `<tr><td class='l'>${names[r.method] || r.method}</td><td>${r.events_found}/${r.events}</td><td>${r.false_alarms}</td><td>${fmt(r.false_alarms_per_inverter_year, 1)}</td><td>${pct(r.step_recall)}</td><td>${pct(r.step_false_rate, 1)}</td></tr>`).join("") + "</tbody>";
+}
+function realTable(cls) {
+  const list = D.real.events.filter(e => cls === "all" || e.cls === cls);
+  document.getElementById("real-count").textContent = `${list.length} events`;
+  document.getElementById("real-table").innerHTML = "<thead><tr><th class='l'>start (UTC)</th><th class='l'>end</th><th class='l'>device</th><th class='l'>cause</th><th>confidence</th><th>flagged h</th><th>lost kWh</th></tr></thead><tbody>" +
+    list.slice(0, 400).map(e => `<tr><td class='l'>${esc(String(e.start).slice(0, 16))}</td><td class='l'>${esc(String(e.end).slice(0, 16))}</td><td class='l'>${esc(e.device_id)}</td><td class='l'><span class="dot" style="background:${catColor(D.category[e.cls])}"></span>${esc(cname(e.cls))}</td><td>${fmt(e.confidence, 2)}</td><td>${fmt(e.hours, 2)}</td><td>${fmt(e.loss_kwh, 1)}</td></tr>`).join("") + "</tbody>";
+}
+
+// ------------------------------------------------------------------ init
+function fill(sel, opts, onChange) {
+  const el = document.getElementById(sel);
+  el.innerHTML = opts.map(([v, l]) => `<option value="${esc(v)}">${esc(l)}</option>`).join("");
+  el.addEventListener("change", () => onChange(el.value));
+}
+function render() {
+  tiles();
+  const tl = seg("tl-mode", timeline); timeline(tl());
+  const invs = Object.keys(D.example.daily.actual);
+  fill("daily-inv", invs.map(i => [i, i]), daily); daily(invs[0]);
+  const used = [...new Set(D.example.events.map(e => e.cls_rules))];
+  fill("ev-filter", [["all", "all"], ...D.classes.filter(c => used.includes(c)).map(c => [c, cname(c)])], evTable); evTable("all");
+  const mm = seg("m-metric", methods); methods(mm());
+  const m2 = seg("m-other", methods2); methods2(m2());
+  const hm = seg("h-metric", heat); heat(hm());
+  mTable();
+  sensTable();
+  seg("cm-src", confusion); seg("cm-model", confusion); confusion();
+  const ds = calcDatasets();
+  fill("calc-ds", ds.map(d => [d.id, d.name]), calc);
+  document.getElementById("calc-reset").addEventListener("click", () => { treat = Object.assign({}, DEFAULT_T); calc(); });
+  calc();
+  if (D.real) {
+    const rused = [...new Set(D.real.events.map(e => e.cls))];
+    fill("real-filter", [["all", "all"], ...D.classes.filter(c => rused.includes(c)).map(c => [c, cname(c)])], realTable);
+    real();
+    if (D.real.sweep) {
+      const sm = [...new Set(D.real.sweep.map(r => r.method))];
+      fill("sweep-m", sm.map(m => [m, D.methods.find(x => x.id === m).name]), realSweep);
+      document.getElementById("sweep-m").value = "peer"; realSweep("peer");
+    }
+  }
+  shading();
+}
+render();
+window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => {
+  timeline(document.querySelector("#tl-mode .on").dataset.v); methods(document.querySelector("#m-metric .on").dataset.v);
+  methods2(document.querySelector("#m-other .on").dataset.v); heat(document.querySelector("#h-metric .on").dataset.v);
+  confusion(); calc(); real(); daily(document.getElementById("daily-inv").value); shading();
+  if (D.real && D.real.sweep) realSweep(document.getElementById("sweep-m").value);
+});
+</script>
+</body>
+</html>

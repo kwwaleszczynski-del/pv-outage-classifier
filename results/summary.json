@@ -1,0 +1,1511 @@
+{
+ "theta": {
+  "expected": {
+   "plant": 0.3,
+   "inverter": 0.2,
+   "string": 0.2
+  },
+  "peer": {
+   "plant": 0.02,
+   "inverter": 0.06,
+   "string": 0.04
+  },
+  "hampel": {
+   "plant": 5.0,
+   "inverter": 3.0,
+   "string": 2.5
+  },
+  "cusum": {
+   "plant": 20.0,
+   "inverter": 40.0,
+   "string": 10.0
+  },
+  "iforest": {
+   "plant": 0.98,
+   "inverter": 0.95,
+   "string": 0.95
+  }
+ },
+ "detection": [
+  {
+   "method": "cusum",
+   "n_det": 4444,
+   "tp_det": 2716,
+   "n_truth": 272,
+   "found": 210,
+   "fa_clipping": 55,
+   "fa_sensor": 33,
+   "fa_other": 1640,
+   "precision": 0.6111611161116112,
+   "recall": 0.7720588235294118,
+   "f1": 0.6822520681917138,
+   "fa_per_dev_year_plant": 9.25,
+   "fa_per_dev_year_inverter": 2.65,
+   "fa_per_dev_year_string": 3.3020833333333335,
+   "f1_sd_plants": 0.049360577117562913,
+   "delay_h_median": 0.0,
+   "duration_rel_err_median": 0.019040617141882966,
+   "energy_rel_err_median": 0.1253131179739732,
+   "energy_bias_total": -0.2351779684405625
+  },
+  {
+   "method": "expected",
+   "n_det": 3006,
+   "tp_det": 2885,
+   "n_truth": 272,
+   "found": 186,
+   "fa_clipping": 0,
+   "fa_sensor": 97,
+   "fa_other": 24,
+   "precision": 0.9597471723220227,
+   "recall": 0.6838235294117647,
+   "f1": 0.7986242368860486,
+   "fa_per_dev_year_plant": 5.5,
+   "fa_per_dev_year_inverter": 0.175,
+   "fa_per_dev_year_string": 0.19166666666666668,
+   "f1_sd_plants": 0.03167755084315942,
+   "delay_h_median": 0.0,
+   "duration_rel_err_median": 0.01242283950617284,
+   "energy_rel_err_median": 0.09039000983466725,
+   "energy_bias_total": -0.3300119196351884
+  },
+  {
+   "method": "gbm",
+   "n_det": 10716,
+   "tp_det": 6495,
+   "n_truth": 272,
+   "found": 228,
+   "fa_clipping": 214,
+   "fa_sensor": 1636,
+   "fa_other": 2371,
+   "precision": 0.6061030235162373,
+   "recall": 0.8382352941176471,
+   "f1": 0.7035151528971791,
+   "fa_per_dev_year_plant": 12.5,
+   "fa_per_dev_year_inverter": 25.950000000000003,
+   "fa_per_dev_year_string": 6.527083333333334,
+   "f1_sd_plants": 0.035371649902873295,
+   "delay_h_median": 0.0,
+   "duration_rel_err_median": 0.033340943691644156,
+   "energy_rel_err_median": 0.12929341982385878,
+   "energy_bias_total": -0.25800033134366984
+  },
+  {
+   "method": "hampel",
+   "n_det": 3845,
+   "tp_det": 2781,
+   "n_truth": 272,
+   "found": 217,
+   "fa_clipping": 0,
+   "fa_sensor": 21,
+   "fa_other": 1043,
+   "precision": 0.7232769830949285,
+   "recall": 0.7977941176470589,
+   "f1": 0.7587102565569335,
+   "fa_per_dev_year_plant": 5.25,
+   "fa_per_dev_year_inverter": 3.8,
+   "fa_per_dev_year_string": 1.85625,
+   "f1_sd_plants": 0.0870297120131784,
+   "delay_h_median": 0.0,
+   "duration_rel_err_median": 0.46321525885558584,
+   "energy_rel_err_median": 0.638033867393364,
+   "energy_bias_total": -0.5245878363058085
+  },
+  {
+   "method": "hybrid",
+   "n_det": 5573,
+   "tp_det": 4079,
+   "n_truth": 272,
+   "found": 234,
+   "fa_clipping": 0,
+   "fa_sensor": 21,
+   "fa_other": 1473,
+   "precision": 0.7319217656558407,
+   "recall": 0.8602941176470589,
+   "f1": 0.790932933372556,
+   "fa_per_dev_year_plant": 5.75,
+   "fa_per_dev_year_inverter": 5.25,
+   "fa_per_dev_year_string": 2.627083333333333,
+   "f1_sd_plants": 0.03558876855635124,
+   "delay_h_median": 0.0,
+   "duration_rel_err_median": 0.027980218636127017,
+   "energy_rel_err_median": 0.12531740748796544,
+   "energy_bias_total": -0.359600515047272
+  },
+  {
+   "method": "iforest",
+   "n_det": 6957,
+   "tp_det": 4807,
+   "n_truth": 272,
+   "found": 217,
+   "fa_clipping": 13,
+   "fa_sensor": 1070,
+   "fa_other": 1067,
+   "precision": 0.6909587465861722,
+   "recall": 0.7977941176470589,
+   "f1": 0.7405430905379258,
+   "fa_per_dev_year_plant": 6.25,
+   "fa_per_dev_year_inverter": 1.925,
+   "fa_per_dev_year_string": 4.266666666666667,
+   "f1_sd_plants": 0.037271009540933854,
+   "delay_h_median": 0.0,
+   "duration_rel_err_median": 0.02531645569620253,
+   "energy_rel_err_median": 0.1418106997558469,
+   "energy_bias_total": -0.35467223815661275
+  },
+  {
+   "method": "peer",
+   "n_det": 4396,
+   "tp_det": 2934,
+   "n_truth": 272,
+   "found": 188,
+   "fa_clipping": 0,
+   "fa_sensor": 0,
+   "fa_other": 1462,
+   "precision": 0.6674249317561419,
+   "recall": 0.6911764705882353,
+   "f1": 0.6790930848706307,
+   "fa_per_dev_year_plant": 0.0,
+   "fa_per_dev_year_inverter": 5.0,
+   "fa_per_dev_year_string": 2.629166666666667,
+   "f1_sd_plants": 0.042956180196198915,
+   "delay_h_median": 0.0,
+   "duration_rel_err_median": 0.12867647058823528,
+   "energy_rel_err_median": 0.26851315520364205,
+   "energy_bias_total": -0.5555426042284486
+  },
+  {
+   "method": "threshold",
+   "n_det": 1994,
+   "tp_det": 1967,
+   "n_truth": 272,
+   "found": 140,
+   "fa_clipping": 0,
+   "fa_sensor": 17,
+   "fa_other": 10,
+   "precision": 0.9864593781344032,
+   "recall": 0.5147058823529411,
+   "f1": 0.6764564275397207,
+   "fa_per_dev_year_plant": 5.0,
+   "fa_per_dev_year_inverter": 0.175,
+   "fa_per_dev_year_string": 0.0,
+   "f1_sd_plants": 0.053927272095879365,
+   "delay_h_median": 0.0,
+   "duration_rel_err_median": 0.11737445476804333,
+   "energy_rel_err_median": 0.06444431786172683,
+   "energy_bias_total": -0.3268990979120865
+  }
+ ],
+ "recall_by_class": [
+  {
+   "method": "cusum",
+   "bypass_short": 1.0,
+   "curtailment": 0.46511627906976744,
+   "grid_outage": 0.8125,
+   "inverter_trip": 0.8717948717948718,
+   "mppt_failure": 1.0,
+   "partial_shading": 1.0,
+   "snow": 0.7567567567567568,
+   "soiling": 0.6451612903225806,
+   "string_open": 1.0
+  },
+  {
+   "method": "expected",
+   "bypass_short": 0.3,
+   "curtailment": 0.627906976744186,
+   "grid_outage": 0.8125,
+   "inverter_trip": 0.9743589743589743,
+   "mppt_failure": 1.0,
+   "partial_shading": 1.0,
+   "snow": 0.7567567567567568,
+   "soiling": 0.3064516129032258,
+   "string_open": 1.0
+  },
+  {
+   "method": "gbm",
+   "bypass_short": 1.0,
+   "curtailment": 0.6511627906976745,
+   "grid_outage": 0.8125,
+   "inverter_trip": 0.8717948717948718,
+   "mppt_failure": 1.0,
+   "partial_shading": 1.0,
+   "snow": 0.7027027027027027,
+   "soiling": 0.8387096774193549,
+   "string_open": 1.0
+  },
+  {
+   "method": "hampel",
+   "bypass_short": 0.8,
+   "curtailment": 0.5581395348837209,
+   "grid_outage": 0.75,
+   "inverter_trip": 0.9487179487179487,
+   "mppt_failure": 0.9375,
+   "partial_shading": 1.0,
+   "snow": 0.7567567567567568,
+   "soiling": 0.7580645161290323,
+   "string_open": 0.96875
+  },
+  {
+   "method": "hybrid",
+   "bypass_short": 1.0,
+   "curtailment": 0.627906976744186,
+   "grid_outage": 0.8125,
+   "inverter_trip": 0.9487179487179487,
+   "mppt_failure": 1.0,
+   "partial_shading": 1.0,
+   "snow": 0.7297297297297297,
+   "soiling": 0.8870967741935484,
+   "string_open": 1.0
+  },
+  {
+   "method": "iforest",
+   "bypass_short": 0.95,
+   "curtailment": 0.627906976744186,
+   "grid_outage": 0.8125,
+   "inverter_trip": 0.9743589743589743,
+   "mppt_failure": 1.0,
+   "partial_shading": 1.0,
+   "snow": 0.7297297297297297,
+   "soiling": 0.6129032258064516,
+   "string_open": 1.0
+  },
+  {
+   "method": "peer",
+   "bypass_short": 1.0,
+   "curtailment": 0.0,
+   "grid_outage": 0.0,
+   "inverter_trip": 0.9487179487179487,
+   "mppt_failure": 1.0,
+   "partial_shading": 1.0,
+   "snow": 0.5675675675675675,
+   "soiling": 0.8870967741935484,
+   "string_open": 1.0
+  },
+  {
+   "method": "threshold",
+   "bypass_short": 0.2,
+   "curtailment": 0.5581395348837209,
+   "grid_outage": 0.8125,
+   "inverter_trip": 0.9743589743589743,
+   "mppt_failure": 0.0625,
+   "partial_shading": 0.0,
+   "snow": 0.5675675675675675,
+   "soiling": 0.11290322580645161,
+   "string_open": 1.0
+  }
+ ],
+ "delay_by_class": [
+  {
+   "method": "cusum",
+   "bypass_short": 0.0,
+   "curtailment": 0.0,
+   "grid_outage": 0.0,
+   "inverter_trip": 0.0,
+   "mppt_failure": 0.0,
+   "partial_shading": 0.0,
+   "snow": 0.0,
+   "soiling": 10.875,
+   "string_open": 0.0
+  },
+  {
+   "method": "expected",
+   "bypass_short": 49.0,
+   "curtailment": 0.0,
+   "grid_outage": 0.0,
+   "inverter_trip": 0.0,
+   "mppt_failure": 0.0,
+   "partial_shading": 318.25,
+   "snow": 0.0,
+   "soiling": 48.5,
+   "string_open": 0.0
+  },
+  {
+   "method": "gbm",
+   "bypass_short": 0.0,
+   "curtailment": 0.0,
+   "grid_outage": 0.0,
+   "inverter_trip": 0.0,
+   "mppt_failure": 0.0,
+   "partial_shading": 7.5,
+   "snow": 0.0,
+   "soiling": 7.0,
+   "string_open": 0.0
+  },
+  {
+   "method": "hampel",
+   "bypass_short": 0.0,
+   "curtailment": 0.0,
+   "grid_outage": 0.0,
+   "inverter_trip": 0.0,
+   "mppt_failure": 0.0,
+   "partial_shading": 0.0,
+   "snow": 0.0,
+   "soiling": 18.0,
+   "string_open": 0.0
+  },
+  {
+   "method": "hybrid",
+   "bypass_short": 0.0,
+   "curtailment": 0.0,
+   "grid_outage": 0.0,
+   "inverter_trip": 0.0,
+   "mppt_failure": 0.0,
+   "partial_shading": 0.0,
+   "snow": 0.0,
+   "soiling": 19.0,
+   "string_open": 0.0
+  },
+  {
+   "method": "iforest",
+   "bypass_short": 0.0,
+   "curtailment": 0.0,
+   "grid_outage": 0.0,
+   "inverter_trip": 0.0,
+   "mppt_failure": 0.0,
+   "partial_shading": 7.5,
+   "snow": 0.0,
+   "soiling": 18.25,
+   "string_open": 0.0
+  },
+  {
+   "method": "peer",
+   "bypass_short": 0.0,
+   "curtailment": NaN,
+   "grid_outage": NaN,
+   "inverter_trip": 0.0,
+   "mppt_failure": 0.0,
+   "partial_shading": 0.0,
+   "snow": 1.5,
+   "soiling": 19.0,
+   "string_open": 0.0
+  },
+  {
+   "method": "threshold",
+   "bypass_short": 128.625,
+   "curtailment": 0.0,
+   "grid_outage": 0.0,
+   "inverter_trip": 0.0,
+   "mppt_failure": 34.75,
+   "partial_shading": NaN,
+   "snow": 0.75,
+   "soiling": 1.5,
+   "string_open": 0.25
+  }
+ ],
+ "oracle_accuracy": {
+  "rules": 0.891566265060241,
+  "gbm": 0.9397590361445783
+ },
+ "oracle_confusion": {
+  "rules": {
+   "inverter_trip": {
+    "inverter_trip": 38,
+    "string_open": 0,
+    "bypass_short": 0,
+    "mppt_failure": 0,
+    "partial_shading": 0,
+    "soiling": 0,
+    "snow": 0,
+    "curtailment": 0,
+    "grid_outage": 0,
+    "comm_loss": 0,
+    "frozen_data": 4,
+    "sensor_fault": 0
+   },
+   "string_open": {
+    "inverter_trip": 0,
+    "string_open": 30,
+    "bypass_short": 0,
+    "mppt_failure": 0,
+    "partial_shading": 0,
+    "soiling": 0,
+    "snow": 0,
+    "curtailment": 0,
+    "grid_outage": 0,
+    "comm_loss": 0,
+    "frozen_data": 0,
+    "sensor_fault": 0
+   },
+   "bypass_short": {
+    "inverter_trip": 0,
+    "string_open": 1,
+    "bypass_short": 20,
+    "mppt_failure": 0,
+    "partial_shading": 0,
+    "soiling": 0,
+    "snow": 0,
+    "curtailment": 0,
+    "grid_outage": 0,
+    "comm_loss": 0,
+    "frozen_data": 0,
+    "sensor_fault": 0
+   },
+   "mppt_failure": {
+    "inverter_trip": 0,
+    "string_open": 0,
+    "bypass_short": 0,
+    "mppt_failure": 15,
+    "partial_shading": 0,
+    "soiling": 0,
+    "snow": 0,
+    "curtailment": 0,
+    "grid_outage": 0,
+    "comm_loss": 0,
+    "frozen_data": 0,
+    "sensor_fault": 0
+   },
+   "partial_shading": {
+    "inverter_trip": 0,
+    "string_open": 1,
+    "bypass_short": 0,
+    "mppt_failure": 1,
+    "partial_shading": 7,
+    "soiling": 0,
+    "snow": 0,
+    "curtailment": 0,
+    "grid_outage": 0,
+    "comm_loss": 0,
+    "frozen_data": 0,
+    "sensor_fault": 0
+   },
+   "soiling": {
+    "inverter_trip": 1,
+    "string_open": 0,
+    "bypass_short": 0,
+    "mppt_failure": 0,
+    "partial_shading": 0,
+    "soiling": 59,
+    "snow": 3,
+    "curtailment": 1,
+    "grid_outage": 0,
+    "comm_loss": 4,
+    "frozen_data": 2,
+    "sensor_fault": 7
+   },
+   "snow": {
+    "inverter_trip": 0,
+    "string_open": 0,
+    "bypass_short": 0,
+    "mppt_failure": 0,
+    "partial_shading": 0,
+    "soiling": 2,
+    "snow": 33,
+    "curtailment": 0,
+    "grid_outage": 0,
+    "comm_loss": 0,
+    "frozen_data": 0,
+    "sensor_fault": 1
+   },
+   "curtailment": {
+    "inverter_trip": 0,
+    "string_open": 0,
+    "bypass_short": 0,
+    "mppt_failure": 0,
+    "partial_shading": 0,
+    "soiling": 0,
+    "snow": 0,
+    "curtailment": 36,
+    "grid_outage": 0,
+    "comm_loss": 0,
+    "frozen_data": 0,
+    "sensor_fault": 0
+   },
+   "grid_outage": {
+    "inverter_trip": 0,
+    "string_open": 0,
+    "bypass_short": 0,
+    "mppt_failure": 0,
+    "partial_shading": 0,
+    "soiling": 0,
+    "snow": 0,
+    "curtailment": 5,
+    "grid_outage": 16,
+    "comm_loss": 0,
+    "frozen_data": 0,
+    "sensor_fault": 0
+   },
+   "comm_loss": {
+    "inverter_trip": 0,
+    "string_open": 0,
+    "bypass_short": 0,
+    "mppt_failure": 0,
+    "partial_shading": 0,
+    "soiling": 1,
+    "snow": 1,
+    "curtailment": 1,
+    "grid_outage": 0,
+    "comm_loss": 28,
+    "frozen_data": 0,
+    "sensor_fault": 0
+   },
+   "frozen_data": {
+    "inverter_trip": 0,
+    "string_open": 0,
+    "bypass_short": 0,
+    "mppt_failure": 0,
+    "partial_shading": 0,
+    "soiling": 0,
+    "snow": 0,
+    "curtailment": 0,
+    "grid_outage": 0,
+    "comm_loss": 0,
+    "frozen_data": 14,
+    "sensor_fault": 0
+   },
+   "sensor_fault": {
+    "inverter_trip": 0,
+    "string_open": 0,
+    "bypass_short": 0,
+    "mppt_failure": 0,
+    "partial_shading": 0,
+    "soiling": 0,
+    "snow": 0,
+    "curtailment": 0,
+    "grid_outage": 0,
+    "comm_loss": 0,
+    "frozen_data": 0,
+    "sensor_fault": 0
+   }
+  },
+  "gbm": {
+   "inverter_trip": {
+    "inverter_trip": 39,
+    "string_open": 0,
+    "bypass_short": 0,
+    "mppt_failure": 0,
+    "partial_shading": 0,
+    "soiling": 0,
+    "snow": 0,
+    "curtailment": 0,
+    "grid_outage": 0,
+    "comm_loss": 1,
+    "frozen_data": 1,
+    "sensor_fault": 0
+   },
+   "string_open": {
+    "inverter_trip": 0,
+    "string_open": 31,
+    "bypass_short": 0,
+    "mppt_failure": 0,
+    "partial_shading": 0,
+    "soiling": 0,
+    "snow": 0,
+    "curtailment": 0,
+    "grid_outage": 0,
+    "comm_loss": 0,
+    "frozen_data": 0,
+    "sensor_fault": 0
+   },
+   "bypass_short": {
+    "inverter_trip": 0,
+    "string_open": 0,
+    "bypass_short": 20,
+    "mppt_failure": 0,
+    "partial_shading": 0,
+    "soiling": 0,
+    "snow": 0,
+    "curtailment": 0,
+    "grid_outage": 0,
+    "comm_loss": 0,
+    "frozen_data": 0,
+    "sensor_fault": 0
+   },
+   "mppt_failure": {
+    "inverter_trip": 0,
+    "string_open": 0,
+    "bypass_short": 0,
+    "mppt_failure": 16,
+    "partial_shading": 0,
+    "soiling": 0,
+    "snow": 0,
+    "curtailment": 0,
+    "grid_outage": 0,
+    "comm_loss": 0,
+    "frozen_data": 0,
+    "sensor_fault": 0
+   },
+   "partial_shading": {
+    "inverter_trip": 0,
+    "string_open": 0,
+    "bypass_short": 0,
+    "mppt_failure": 0,
+    "partial_shading": 7,
+    "soiling": 0,
+    "snow": 0,
+    "curtailment": 0,
+    "grid_outage": 0,
+    "comm_loss": 0,
+    "frozen_data": 0,
+    "sensor_fault": 0
+   },
+   "soiling": {
+    "inverter_trip": 0,
+    "string_open": 1,
+    "bypass_short": 0,
+    "mppt_failure": 0,
+    "partial_shading": 0,
+    "soiling": 61,
+    "snow": 0,
+    "curtailment": 0,
+    "grid_outage": 0,
+    "comm_loss": 0,
+    "frozen_data": 1,
+    "sensor_fault": 2
+   },
+   "snow": {
+    "inverter_trip": 0,
+    "string_open": 0,
+    "bypass_short": 0,
+    "mppt_failure": 0,
+    "partial_shading": 0,
+    "soiling": 0,
+    "snow": 36,
+    "curtailment": 0,
+    "grid_outage": 0,
+    "comm_loss": 0,
+    "frozen_data": 0,
+    "sensor_fault": 0
+   },
+   "curtailment": {
+    "inverter_trip": 0,
+    "string_open": 0,
+    "bypass_short": 0,
+    "mppt_failure": 0,
+    "partial_shading": 0,
+    "soiling": 0,
+    "snow": 0,
+    "curtailment": 34,
+    "grid_outage": 0,
+    "comm_loss": 0,
+    "frozen_data": 0,
+    "sensor_fault": 0
+   },
+   "grid_outage": {
+    "inverter_trip": 0,
+    "string_open": 0,
+    "bypass_short": 0,
+    "mppt_failure": 0,
+    "partial_shading": 0,
+    "soiling": 0,
+    "snow": 0,
+    "curtailment": 1,
+    "grid_outage": 15,
+    "comm_loss": 0,
+    "frozen_data": 0,
+    "sensor_fault": 0
+   },
+   "comm_loss": {
+    "inverter_trip": 0,
+    "string_open": 0,
+    "bypass_short": 0,
+    "mppt_failure": 0,
+    "partial_shading": 0,
+    "soiling": 1,
+    "snow": 1,
+    "curtailment": 0,
+    "grid_outage": 0,
+    "comm_loss": 29,
+    "frozen_data": 0,
+    "sensor_fault": 0
+   },
+   "frozen_data": {
+    "inverter_trip": 0,
+    "string_open": 0,
+    "bypass_short": 0,
+    "mppt_failure": 0,
+    "partial_shading": 0,
+    "soiling": 0,
+    "snow": 0,
+    "curtailment": 0,
+    "grid_outage": 0,
+    "comm_loss": 2,
+    "frozen_data": 18,
+    "sensor_fault": 0
+   },
+   "sensor_fault": {
+    "inverter_trip": 0,
+    "string_open": 0,
+    "bypass_short": 0,
+    "mppt_failure": 0,
+    "partial_shading": 0,
+    "soiling": 0,
+    "snow": 0,
+    "curtailment": 8,
+    "grid_outage": 1,
+    "comm_loss": 0,
+    "frozen_data": 0,
+    "sensor_fault": 6
+   }
+  }
+ },
+ "pipeline_accuracy": {
+  "rules": 0.7388473595370147,
+  "gbm": 0.9069206655413552
+ },
+ "pipeline_confusion": {
+  "rules": {
+   "inverter_trip": {
+    "inverter_trip": 41,
+    "string_open": 0,
+    "bypass_short": 0,
+    "mppt_failure": 0,
+    "partial_shading": 0,
+    "soiling": 0,
+    "snow": 0,
+    "curtailment": 0,
+    "grid_outage": 0,
+    "comm_loss": 0,
+    "frozen_data": 4,
+    "sensor_fault": 0
+   },
+   "string_open": {
+    "inverter_trip": 0,
+    "string_open": 39,
+    "bypass_short": 1,
+    "mppt_failure": 0,
+    "partial_shading": 0,
+    "soiling": 0,
+    "snow": 1,
+    "curtailment": 0,
+    "grid_outage": 0,
+    "comm_loss": 0,
+    "frozen_data": 0,
+    "sensor_fault": 0
+   },
+   "bypass_short": {
+    "inverter_trip": 0,
+    "string_open": 1,
+    "bypass_short": 51,
+    "mppt_failure": 0,
+    "partial_shading": 10,
+    "soiling": 49,
+    "snow": 130,
+    "curtailment": 0,
+    "grid_outage": 0,
+    "comm_loss": 0,
+    "frozen_data": 0,
+    "sensor_fault": 0
+   },
+   "mppt_failure": {
+    "inverter_trip": 0,
+    "string_open": 0,
+    "bypass_short": 0,
+    "mppt_failure": 38,
+    "partial_shading": 8,
+    "soiling": 2,
+    "snow": 82,
+    "curtailment": 0,
+    "grid_outage": 0,
+    "comm_loss": 0,
+    "frozen_data": 0,
+    "sensor_fault": 0
+   },
+   "partial_shading": {
+    "inverter_trip": 0,
+    "string_open": 2,
+    "bypass_short": 97,
+    "mppt_failure": 4,
+    "partial_shading": 660,
+    "soiling": 286,
+    "snow": 121,
+    "curtailment": 0,
+    "grid_outage": 0,
+    "comm_loss": 0,
+    "frozen_data": 0,
+    "sensor_fault": 0
+   },
+   "soiling": {
+    "inverter_trip": 0,
+    "string_open": 0,
+    "bypass_short": 2,
+    "mppt_failure": 0,
+    "partial_shading": 1,
+    "soiling": 366,
+    "snow": 0,
+    "curtailment": 0,
+    "grid_outage": 0,
+    "comm_loss": 0,
+    "frozen_data": 0,
+    "sensor_fault": 1
+   },
+   "snow": {
+    "inverter_trip": 0,
+    "string_open": 2,
+    "bypass_short": 2,
+    "mppt_failure": 2,
+    "partial_shading": 0,
+    "soiling": 251,
+    "snow": 1783,
+    "curtailment": 0,
+    "grid_outage": 0,
+    "comm_loss": 0,
+    "frozen_data": 0,
+    "sensor_fault": 3
+   },
+   "curtailment": {
+    "inverter_trip": 0,
+    "string_open": 0,
+    "bypass_short": 0,
+    "mppt_failure": 0,
+    "partial_shading": 0,
+    "soiling": 0,
+    "snow": 1,
+    "curtailment": 30,
+    "grid_outage": 0,
+    "comm_loss": 0,
+    "frozen_data": 0,
+    "sensor_fault": 12
+   },
+   "grid_outage": {
+    "inverter_trip": 0,
+    "string_open": 0,
+    "bypass_short": 0,
+    "mppt_failure": 0,
+    "partial_shading": 0,
+    "soiling": 0,
+    "snow": 0,
+    "curtailment": 3,
+    "grid_outage": 13,
+    "comm_loss": 0,
+    "frozen_data": 0,
+    "sensor_fault": 5
+   },
+   "comm_loss": {
+    "inverter_trip": 0,
+    "string_open": 0,
+    "bypass_short": 0,
+    "mppt_failure": 0,
+    "partial_shading": 0,
+    "soiling": 0,
+    "snow": 0,
+    "curtailment": 0,
+    "grid_outage": 0,
+    "comm_loss": 27,
+    "frozen_data": 0,
+    "sensor_fault": 0
+   },
+   "frozen_data": {
+    "inverter_trip": 0,
+    "string_open": 0,
+    "bypass_short": 0,
+    "mppt_failure": 0,
+    "partial_shading": 0,
+    "soiling": 0,
+    "snow": 0,
+    "curtailment": 0,
+    "grid_outage": 0,
+    "comm_loss": 0,
+    "frozen_data": 16,
+    "sensor_fault": 0
+   },
+   "sensor_fault": {
+    "inverter_trip": 0,
+    "string_open": 0,
+    "bypass_short": 0,
+    "mppt_failure": 0,
+    "partial_shading": 0,
+    "soiling": 0,
+    "snow": 0,
+    "curtailment": 0,
+    "grid_outage": 0,
+    "comm_loss": 0,
+    "frozen_data": 0,
+    "sensor_fault": 0
+   }
+  },
+  "gbm": {
+   "inverter_trip": {
+    "inverter_trip": 41,
+    "string_open": 0,
+    "bypass_short": 0,
+    "mppt_failure": 0,
+    "partial_shading": 0,
+    "soiling": 0,
+    "snow": 0,
+    "curtailment": 0,
+    "grid_outage": 0,
+    "comm_loss": 0,
+    "frozen_data": 0,
+    "sensor_fault": 0
+   },
+   "string_open": {
+    "inverter_trip": 0,
+    "string_open": 41,
+    "bypass_short": 3,
+    "mppt_failure": 0,
+    "partial_shading": 0,
+    "soiling": 0,
+    "snow": 0,
+    "curtailment": 0,
+    "grid_outage": 0,
+    "comm_loss": 0,
+    "frozen_data": 0,
+    "sensor_fault": 0
+   },
+   "bypass_short": {
+    "inverter_trip": 0,
+    "string_open": 0,
+    "bypass_short": 144,
+    "mppt_failure": 0,
+    "partial_shading": 0,
+    "soiling": 0,
+    "snow": 0,
+    "curtailment": 0,
+    "grid_outage": 0,
+    "comm_loss": 0,
+    "frozen_data": 0,
+    "sensor_fault": 0
+   },
+   "mppt_failure": {
+    "inverter_trip": 0,
+    "string_open": 0,
+    "bypass_short": 0,
+    "mppt_failure": 42,
+    "partial_shading": 0,
+    "soiling": 0,
+    "snow": 0,
+    "curtailment": 0,
+    "grid_outage": 0,
+    "comm_loss": 0,
+    "frozen_data": 0,
+    "sensor_fault": 0
+   },
+   "partial_shading": {
+    "inverter_trip": 0,
+    "string_open": 0,
+    "bypass_short": 1,
+    "mppt_failure": 0,
+    "partial_shading": 675,
+    "soiling": 12,
+    "snow": 0,
+    "curtailment": 0,
+    "grid_outage": 0,
+    "comm_loss": 0,
+    "frozen_data": 0,
+    "sensor_fault": 0
+   },
+   "soiling": {
+    "inverter_trip": 0,
+    "string_open": 2,
+    "bypass_short": 5,
+    "mppt_failure": 0,
+    "partial_shading": 4,
+    "soiling": 669,
+    "snow": 58,
+    "curtailment": 0,
+    "grid_outage": 0,
+    "comm_loss": 0,
+    "frozen_data": 0,
+    "sensor_fault": 0
+   },
+   "snow": {
+    "inverter_trip": 0,
+    "string_open": 1,
+    "bypass_short": 0,
+    "mppt_failure": 2,
+    "partial_shading": 0,
+    "soiling": 273,
+    "snow": 2057,
+    "curtailment": 0,
+    "grid_outage": 0,
+    "comm_loss": 0,
+    "frozen_data": 0,
+    "sensor_fault": 3
+   },
+   "curtailment": {
+    "inverter_trip": 0,
+    "string_open": 0,
+    "bypass_short": 0,
+    "mppt_failure": 0,
+    "partial_shading": 0,
+    "soiling": 0,
+    "snow": 0,
+    "curtailment": 29,
+    "grid_outage": 0,
+    "comm_loss": 0,
+    "frozen_data": 0,
+    "sensor_fault": 11
+   },
+   "grid_outage": {
+    "inverter_trip": 0,
+    "string_open": 0,
+    "bypass_short": 0,
+    "mppt_failure": 0,
+    "partial_shading": 0,
+    "soiling": 0,
+    "snow": 0,
+    "curtailment": 0,
+    "grid_outage": 12,
+    "comm_loss": 0,
+    "frozen_data": 0,
+    "sensor_fault": 3
+   },
+   "comm_loss": {
+    "inverter_trip": 0,
+    "string_open": 0,
+    "bypass_short": 0,
+    "mppt_failure": 0,
+    "partial_shading": 0,
+    "soiling": 0,
+    "snow": 1,
+    "curtailment": 0,
+    "grid_outage": 0,
+    "comm_loss": 27,
+    "frozen_data": 0,
+    "sensor_fault": 0
+   },
+   "frozen_data": {
+    "inverter_trip": 0,
+    "string_open": 0,
+    "bypass_short": 0,
+    "mppt_failure": 0,
+    "partial_shading": 0,
+    "soiling": 0,
+    "snow": 0,
+    "curtailment": 0,
+    "grid_outage": 0,
+    "comm_loss": 0,
+    "frozen_data": 20,
+    "sensor_fault": 0
+   },
+   "sensor_fault": {
+    "inverter_trip": 0,
+    "string_open": 0,
+    "bypass_short": 0,
+    "mppt_failure": 0,
+    "partial_shading": 0,
+    "soiling": 0,
+    "snow": 2,
+    "curtailment": 4,
+    "grid_outage": 1,
+    "comm_loss": 0,
+    "frozen_data": 0,
+    "sensor_fault": 4
+   }
+  }
+ },
+ "pipeline_false_alarms": 1472,
+ "pipeline_events": 5619,
+ "kpi_abs_err": [
+  {
+   "method": "cusum",
+   "classifier": "gbm",
+   "err_time_pp": 0.07407769779514406,
+   "err_energy_pp": 0.04505602592696223
+  },
+  {
+   "method": "cusum",
+   "classifier": "rules",
+   "err_time_pp": 0.057193307648675806,
+   "err_energy_pp": 0.018713352363725066
+  },
+  {
+   "method": "expected",
+   "classifier": "gbm",
+   "err_time_pp": 0.006831189713132901,
+   "err_energy_pp": 0.02125821474277534
+  },
+  {
+   "method": "expected",
+   "classifier": "rules",
+   "err_time_pp": 0.0339340959256057,
+   "err_energy_pp": 0.023385535238459876
+  },
+  {
+   "method": "gbm",
+   "classifier": "gbm",
+   "err_time_pp": 0.06121907718087405,
+   "err_energy_pp": 0.08733934434942414
+  },
+  {
+   "method": "gbm",
+   "classifier": "rules",
+   "err_time_pp": 0.07245617099199131,
+   "err_energy_pp": 0.0656538921164157
+  },
+  {
+   "method": "hampel",
+   "classifier": "gbm",
+   "err_time_pp": 0.3117452608047383,
+   "err_energy_pp": 0.3164585929124414
+  },
+  {
+   "method": "hampel",
+   "classifier": "rules",
+   "err_time_pp": 0.2895113711049946,
+   "err_energy_pp": 0.29407847600072257
+  },
+  {
+   "method": "hybrid",
+   "classifier": "gbm",
+   "err_time_pp": 0.007304470630475901,
+   "err_energy_pp": 0.018957525080151583
+  },
+  {
+   "method": "hybrid",
+   "classifier": "rules",
+   "err_time_pp": 0.04116828488316959,
+   "err_energy_pp": 0.02276496147066709
+  },
+  {
+   "method": "iforest",
+   "classifier": "gbm",
+   "err_time_pp": 0.03674101970622956,
+   "err_energy_pp": 0.020522898836927705
+  },
+  {
+   "method": "iforest",
+   "classifier": "rules",
+   "err_time_pp": 0.037544717676715744,
+   "err_energy_pp": 0.025249327766965757
+  },
+  {
+   "method": "peer",
+   "classifier": "gbm",
+   "err_time_pp": 0.009868687478992166,
+   "err_energy_pp": 0.013526186952175778
+  },
+  {
+   "method": "peer",
+   "classifier": "rules",
+   "err_time_pp": 0.03810137642893119,
+   "err_energy_pp": 0.023700467733386854
+  },
+  {
+   "method": "threshold",
+   "classifier": "gbm",
+   "err_time_pp": 0.017792847552550173,
+   "err_energy_pp": 0.01726212426524376
+  },
+  {
+   "method": "threshold",
+   "classifier": "rules",
+   "err_time_pp": 0.03210048789798192,
+   "err_energy_pp": 0.01985522519017402
+  }
+ ],
+ "kpi_bias": [
+  {
+   "method": "cusum",
+   "classifier": "gbm",
+   "err_time_pp": -0.017461105778687758,
+   "err_energy_pp": 0.04505602592696223
+  },
+  {
+   "method": "cusum",
+   "classifier": "rules",
+   "err_time_pp": -0.047462736333467315,
+   "err_energy_pp": 0.017381598263094267
+  },
+  {
+   "method": "expected",
+   "classifier": "gbm",
+   "err_time_pp": 0.006831189713132901,
+   "err_energy_pp": 0.02125821474277534
+  },
+  {
+   "method": "expected",
+   "classifier": "rules",
+   "err_time_pp": -0.01822269111186048,
+   "err_energy_pp": -0.00587517812967453
+  },
+  {
+   "method": "gbm",
+   "classifier": "gbm",
+   "err_time_pp": 0.035518666528872034,
+   "err_energy_pp": 0.08733934434942414
+  },
+  {
+   "method": "gbm",
+   "classifier": "rules",
+   "err_time_pp": 0.008028388394193398,
+   "err_energy_pp": 0.06402193815044088
+  },
+  {
+   "method": "hampel",
+   "classifier": "gbm",
+   "err_time_pp": 0.3117452608047383,
+   "err_energy_pp": 0.3164585929124414
+  },
+  {
+   "method": "hampel",
+   "classifier": "rules",
+   "err_time_pp": 0.2895113711049946,
+   "err_energy_pp": 0.29407847600072257
+  },
+  {
+   "method": "hybrid",
+   "classifier": "gbm",
+   "err_time_pp": -0.0012794713061925478,
+   "err_energy_pp": 0.018957525080151583
+  },
+  {
+   "method": "hybrid",
+   "classifier": "rules",
+   "err_time_pp": -0.027511630019555477,
+   "err_energy_pp": -0.008130550584384277
+  },
+  {
+   "method": "iforest",
+   "classifier": "gbm",
+   "err_time_pp": -0.03214941334967192,
+   "err_energy_pp": 0.020522898836927705
+  },
+  {
+   "method": "iforest",
+   "classifier": "rules",
+   "err_time_pp": -0.02930763496458988,
+   "err_energy_pp": 0.00022847622783428445
+  },
+  {
+   "method": "peer",
+   "classifier": "gbm",
+   "err_time_pp": 0.005243873263005572,
+   "err_energy_pp": 0.013526186952175778
+  },
+  {
+   "method": "peer",
+   "classifier": "rules",
+   "err_time_pp": -0.019647785641505044,
+   "err_energy_pp": -0.012306033562306529
+  },
+  {
+   "method": "threshold",
+   "classifier": "gbm",
+   "err_time_pp": 0.017792847552550173,
+   "err_energy_pp": 0.01726212426524376
+  },
+  {
+   "method": "threshold",
+   "classifier": "rules",
+   "err_time_pp": -0.018701237280163707,
+   "err_energy_pp": -0.015192184349993587
+  }
+ ],
+ "kpi_truth": [
+  {
+   "plant": "2023-s11",
+   "method": "truth",
+   "classifier": "truth",
+   "availability_time": 0.9918078616162223,
+   "availability_energy": 0.9916171930283267,
+   "energy_kwh": 1396196.3218664303,
+   "potential_kwh": 1457360.149890201,
+   "pr": 0.8705178599389891,
+   "pr_ext_corrected": 0.8832509704703343,
+   "pr_potential": 0.9086530446856103,
+   "lost_inverter_trip": 9522.606182694406,
+   "lost_string_open": 2522.9669709447217,
+   "lost_bypass_short": 140.27802591115073,
+   "lost_mppt_failure": 502.65189765643254,
+   "lost_partial_shading": 98.12264292043616,
+   "lost_soiling": 13492.472868702962,
+   "lost_snow": 14462.492387410268,
+   "lost_curtailment": 17000.23322596412,
+   "lost_grid_outage": 3422.0038215660325,
+   "lost_comm_loss": 0.0,
+   "lost_frozen_data": 0.0,
+   "lost_sensor_fault": 0.0
+  },
+  {
+   "plant": "2023-s12",
+   "method": "truth",
+   "classifier": "truth",
+   "availability_time": 0.9923771343156383,
+   "availability_energy": 0.9929257590214858,
+   "energy_kwh": 1392942.4566687313,
+   "potential_kwh": 1452472.5341249465,
+   "pr": 0.8711525300505785,
+   "pr_ext_corrected": 0.8848056772936547,
+   "pr_potential": 0.9083829104886284,
+   "lost_inverter_trip": 7599.502950580209,
+   "lost_string_open": 2521.2006849991158,
+   "lost_bypass_short": 425.5353610597104,
+   "lost_mppt_failure": 1006.0825825166249,
+   "lost_partial_shading": 2.1138226445438826,
+   "lost_soiling": 12452.85520511772,
+   "lost_snow": 13691.88146132066,
+   "lost_curtailment": 12178.358117202963,
+   "lost_grid_outage": 9652.547270773544,
+   "lost_comm_loss": 0.0,
+   "lost_frozen_data": 0.0,
+   "lost_sensor_fault": 0.0
+  },
+  {
+   "plant": "2024-s13",
+   "method": "truth",
+   "classifier": "truth",
+   "availability_time": 0.9934863073315894,
+   "availability_energy": 0.9938111235992965,
+   "energy_kwh": 1441646.0883711423,
+   "potential_kwh": 1496951.9942593372,
+   "pr": 0.8631474897815765,
+   "pr_ext_corrected": 0.8774001490903703,
+   "pr_potential": 0.8962604390848469,
+   "lost_inverter_trip": 5514.9125982403575,
+   "lost_string_open": 3602.21160648737,
+   "lost_bypass_short": 385.3938107593651,
+   "lost_mppt_failure": 547.6079544273965,
+   "lost_partial_shading": 37.03086654076793,
+   "lost_soiling": 11605.187749463837,
+   "lost_snow": 9808.486521129655,
+   "lost_curtailment": 18567.38575510621,
+   "lost_grid_outage": 5237.689026040051,
+   "lost_comm_loss": 0.0,
+   "lost_frozen_data": 0.0,
+   "lost_sensor_fault": 0.0
+  },
+  {
+   "plant": "2024-s14",
+   "method": "truth",
+   "classifier": "truth",
+   "availability_time": 0.9932171820428124,
+   "availability_energy": 0.9929049827354259,
+   "energy_kwh": 1455186.4962482061,
+   "potential_kwh": 1503339.7387018742,
+   "pr": 0.8748502720032885,
+   "pr_ext_corrected": 0.883813329950926,
+   "pr_potential": 0.9037997416190692,
+   "lost_inverter_trip": 6982.17777406666,
+   "lost_string_open": 3578.26581305923,
+   "lost_bypass_short": 295.1707589380226,
+   "lost_mppt_failure": 665.8228914321375,
+   "lost_partial_shading": 30.817332200168945,
+   "lost_soiling": 12246.169205692086,
+   "lost_snow": 9446.072224300055,
+   "lost_curtailment": 13912.836515418605,
+   "lost_grid_outage": 995.9099385610928,
+   "lost_comm_loss": 0.0,
+   "lost_frozen_data": 0.0,
+   "lost_sensor_fault": 0.0
+  }
+ ],
+ "lost_by_category": {
+  "cusum|gbm": {
+   "external": 52338.67958661519,
+   "environment": 69829.43849373417,
+   "fault": 42703.48453590192,
+   "data": 22415.99456777463
+  },
+  "cusum|rules": {
+   "external": 67635.30828836122,
+   "environment": 73004.44798816362,
+   "fault": 46647.733576139086,
+   "data": 0.10733136198747034
+  },
+  "expected|gbm": {
+   "external": 67595.52966602526,
+   "environment": 31686.149168037642,
+   "fault": 42217.06126608791,
+   "data": 12851.365408882244
+  },
+  "expected|rules": {
+   "external": 77271.59585288093,
+   "environment": 31930.7427992485,
+   "fault": 45147.76685690363,
+   "data": 0.0
+  },
+  "gbm|gbm": {
+   "external": 58692.70484378467,
+   "environment": 63838.04813375554,
+   "fault": 40066.42839181267,
+   "data": 23915.758799595547
+  },
+  "gbm|rules": {
+   "external": 68317.75430918956,
+   "environment": 74456.2184446389,
+   "fault": 43738.96741511994,
+   "data": 0.0
+  },
+  "hampel|gbm": {
+   "external": 64825.96163462042,
+   "environment": 20756.70316895331,
+   "fault": 23862.769290018903,
+   "data": 12474.521973714185
+  },
+  "hampel|rules": {
+   "external": 74505.10957463388,
+   "environment": 21307.901736333584,
+   "fault": 26106.94475633936,
+   "data": 0.0
+  },
+  "hybrid|gbm": {
+   "external": 67294.09518875639,
+   "environment": 30869.438038683642,
+   "fault": 43809.966728588726,
+   "data": 13279.788287386233
+  },
+  "hybrid|rules": {
+   "external": 77480.70092283713,
+   "environment": 30530.857805876323,
+   "fault": 47241.729514701525,
+   "data": 0.0
+  },
+  "iforest|gbm": {
+   "external": 63360.959724869484,
+   "environment": 30070.761906233907,
+   "fault": 43685.0913160626,
+   "data": 16891.614642566077
+  },
+  "iforest|rules": {
+   "external": 77067.48771346635,
+   "environment": 29459.361902515288,
+   "fault": 47481.577973750434,
+   "data": 0.0
+  },
+  "peer|gbm": {
+   "external": 0.0,
+   "environment": 18509.80515251623,
+   "fault": 43967.42744690151,
+   "data": 1671.473928541432
+  },
+  "peer|rules": {
+   "external": 1.9664749717154084,
+   "environment": 16390.972145484808,
+   "fault": 47755.76790750264,
+   "data": 0.0
+  },
+  "threshold|gbm": {
+   "external": 60301.61506762017,
+   "environment": 4824.557719212061,
+   "fault": 40242.01067214746,
+   "data": 13278.94815970889
+  },
+  "threshold|rules": {
+   "external": 71464.0975538471,
+   "environment": 5159.380518373549,
+   "fault": 42023.65354646794,
+   "data": 0.0
+  },
+  "truth|truth": {
+   "external": 80966.96367063261,
+   "environment": 97373.70228744316,
+   "fault": 45812.387863772914,
+   "data": 0.0
+  }
+ },
+ "data_quality": [
+  {
+   "cls": "comm_loss",
+   "n_truth": 32,
+   "found": 27,
+   "n_det": 28,
+   "tp_det": 27
+  },
+  {
+   "cls": "frozen_data",
+   "n_truth": 20,
+   "found": 14,
+   "n_det": 14,
+   "tp_det": 14
+  },
+  {
+   "cls": "sensor_fault",
+   "n_truth": 8,
+   "found": 0,
+   "n_det": 4,
+   "tp_det": 0
+  }
+ ],
+ "n_test_events": 272
+}

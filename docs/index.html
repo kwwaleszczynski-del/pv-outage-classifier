@@ -406,7 +406,10 @@ function confusion() {
     colorscale: [[0, css("--seq0")], [0.5, css("--seq1")], [1, css("--seq3")]], zmin: 0, zmax: 1, showscale: false,
     text: n.map(r => r.map(v => v ? String(v) : "")), texttemplate: "%{text}", customdata: n, xgap: 2, ygap: 2,
     hovertemplate: "true %{y}<br>predicted %{x}<br>%{customdata} events (%{z:.0%} of row)<extra></extra>"}],
-    baseLayout({margin: {l: 150, r: 10, t: 10, b: 110}, yaxis: {autorange: "reversed", title: "true cause"}, xaxis: {title: "predicted", tickangle: -35}}), CONF);
+    // vertical x labels and a smaller font on phones, so neighbouring class names do not overlap
+    baseLayout({margin: {l: 150, r: 10, t: 10, b: 150}, yaxis: {autorange: "reversed", title: "true cause", automargin: true,
+                tickfont: {size: innerWidth < 640 ? 9 : 12}},
+                xaxis: {title: "predicted", tickangle: -90, automargin: true, tickfont: {size: innerWidth < 640 ? 9 : 12}}}), CONF);
   document.getElementById("cm-acc").textContent = `accuracy ${pct(c.accuracy)}`;
 }
 
@@ -504,7 +507,9 @@ function shading() {
       customdata: pts.map(r => r.theta), hovertemplate: `${names[m]}<br>threshold %{customdata}<br>%{y} of ${n} days found, %{x:.1f} alarms / inverter-year<extra></extra>`};
   });
   Plotly.react("sh-sweep", traces, baseLayout({xaxis: {type: "log", title: "alarms outside the labels per inverter-year", gridcolor: css("--grid")},
-    yaxis: {title: `shaded days found (of ${n})`, gridcolor: css("--grid")}, margin: {l: 55, r: 10, t: 40, b: 45}}), CONF);
+    yaxis: {title: `shaded days found (of ${n})`, gridcolor: css("--grid")},
+    // legend in the top margin, above the plotting area (it wraps to more rows on phones)
+    legend: {orientation: "h", x: 0, y: 1.02, yanchor: "bottom"}, margin: {l: 55, r: 10, t: innerWidth < 640 ? 100 : 64, b: 45}}), CONF);
   const d = S.daily, sh = d.shaded.map(Boolean);
   Plotly.react("sh-daily", [
     {type: "scatter", mode: "markers", name: "normal day", x: d.dates.filter((_, i) => !sh[i]), y: d.ratio.filter((_, i) => !sh[i]), marker: {size: 4, color: css("--muted")}},

@@ -220,6 +220,7 @@ def fig_real(plt, real, results, path):
                  height=0.62)
     for yy, v, fnd, n in zip(y, r["other_per_device_year"], r["plain_found"], r["plain_outages"]):
         axes[0].text(v + 0.3, yy, f"{v:.1f}  ({fnd}/{n} outages)", va="center", fontsize=8, color=INK2)
+    axes[0].set_xlim(0, r["other_per_device_year"].max() * 1.32)  # room for the longest bar label
     axes[0].set_yticks(y, [METHOD_NAMES[m] for m in r.index])
     axes[0].set_title("Other alarms per inverter-year (PVDAQ)", loc="left")
     axes[0].grid(axis="y", visible=False)
@@ -259,14 +260,14 @@ def fig_shading(plt, results, path):
     axes[0].set_xlabel("alarms outside the labels per inverter-year")
     axes[0].set_ylabel(f"shaded days found (of {n})")
     axes[0].set_title("Threshold sweep (ring: threshold from the simulation)", loc="left")
-    axes[0].legend(fontsize=7, loc="lower right")
+    axes[0].legend(fontsize=7, loc="upper left")  # the empty corner: low alarm counts, many days found
     d = daily["ratio"].clip(0.3, 1.2)
     axes[1].plot(d.index, d, ".", ms=3, color=MUTED, label="normal day")
     sh = daily["shaded"] == 1
     axes[1].plot(d.index[sh], d[sh], "o", ms=5, color="#eb6834", label="labelled shading on inverter 1")
     axes[1].set_ylabel("daily energy, inverter 1 / inverter 2")
     axes[1].set_title("Twin inverters on La Reunion", loc="left")
-    axes[1].legend(fontsize=7, loc="lower left")
+    axes[1].legend(fontsize=7, loc="lower right")  # the labelled days are early in the record
     fig.tight_layout()
     fig.savefig(path)
     plt.close(fig)

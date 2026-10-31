@@ -31,20 +31,26 @@ comparison, confusion matrices, availability calculator, real data)
 Thresholds per level (plant, inverter, string) were tuned for event F1 on four other plant-years with other
 weather; the test plants were scored once.
 
-| Method | Precision | Recall | F1 | False alarms / inverter-year | / string-year | Lost energy, median error per event | Availability error, time [pp] |
-|---|---|---|---|---|---|---|---|
-| Threshold (zero output, status code) | **0.99** | 0.51 | 0.68 | 0.2 | 0.0 | 6 % | 0.03 |
-| Expected model (pvlib, PR) | 0.96 | 0.68 | **0.80** | 0.2 | 0.2 | 9 % | 0.03 |
-| Peer median (siblings) | 0.67 | 0.69 | 0.68 | 5.0 | 2.6 | 27 % | 0.04 |
-| Hampel z-score | 0.72 | 0.80 | 0.76 | 3.8 | 1.9 | 64 % | 0.29 |
-| CUSUM | 0.61 | 0.77 | 0.68 | 2.7 | 3.3 | 13 % | 0.06 |
-| Isolation forest | 0.69 | 0.80 | 0.74 | 1.9 | 4.3 | 14 % | 0.04 |
-| Gradient boosting (supervised) | 0.61 | 0.84 | 0.70 | 26.0 | 6.5 | 13 % | 0.07 |
-| **Hybrid (tool default)** | 0.73 | **0.86** | 0.79 | 5.3 | 2.6 | 13 % | 0.04 |
+| Method | Precision | Recall | F1 | Event precision | Fragments per event | False alarms / inverter-year | / string-year | Lost energy, median error per event | Availability error, time [pp] |
+|---|---|---|---|---|---|---|---|---|---|
+| Threshold (zero output, status code) | **0.99** | 0.51 | 0.68 | 0.84 | 14 | 0.2 | 0.0 | 6 % | 0.03 |
+| Expected model (pvlib, PR) | 0.96 | 0.68 | **0.80** | 0.61 | 16 | 0.2 | 0.2 | 9 % | 0.03 |
+| Peer median (siblings) | 0.67 | 0.69 | 0.68 | 0.11 | 16 | 5.0 | 2.6 | 27 % | 0.04 |
+| Hampel z-score | 0.72 | 0.80 | 0.76 | 0.17 | 13 | 3.8 | 1.9 | 64 % | 0.29 |
+| CUSUM | 0.61 | 0.77 | 0.68 | 0.11 | 13 | 2.7 | 3.3 | 13 % | 0.06 |
+| Isolation forest | 0.69 | 0.80 | 0.74 | 0.10 | 22 | 1.9 | 4.3 | 14 % | 0.04 |
+| Gradient boosting (supervised) | 0.61 | 0.84 | 0.70 | 0.06 | 28 | 26.0 | 6.5 | 13 % | 0.07 |
+| **Hybrid (tool default)** | 0.73 | **0.86** | 0.79 | 0.14 | 17 | 5.3 | 2.6 | 13 % | 0.04 |
 
-Event-level scores pooled over the test plants (F1 varies by ±0.03-0.09 between plants). Hybrid: peer median for
-inverters and strings, expected model for the plant meter, threshold everywhere. Availability error: mean absolute
-difference between tool and truth over the test plants, with causes from the rules; truth 99.18-99.35 %.
+Scores pooled over the test plants (F1 varies by ±0.03-0.09 between plants). Precision counts detections, recall
+counts truth events (see Scoring). One event is usually flagged in many pieces, one per daylight period and device:
+the hybrid makes 4,079 correct detections for the 234 events it finds, 17 per event. **Event precision** counts
+each found event once and groups false alarms per device and day; it is what an operator opening one ticket per
+event would see. On that count only the threshold (0.84) and the expected model (0.61) stay above one half; the
+hybrid's 0.14 means 234 found events against 1,488 device-days with false alarms
+(`results/sensitivity_min_duration.csv`). Hybrid: peer median for inverters and strings, expected model for the
+plant meter, threshold everywhere. Availability error: mean absolute difference between tool and truth over the
+test plants, with causes from the rules; truth 99.18-99.35 %.
 
 ![recall by class](docs/img/recall_by_class.png)
 
@@ -74,8 +80,9 @@ difference between tool and truth over the test plants, with causes from the rul
   80 % and 57 %: only the part of the episode above the threshold is flagged and costed.
 - **Most false alarms disappear if an event must last an hour.** Re-scoring the same test plants with events of at
   least 1 h instead of 30 minutes (a check of one setting after the fact, not a re-tuning) moves the hybrid from
-  precision 0.73 / recall 0.86 / F1 0.79 to **0.97 / 0.74 / 0.84**, and its false alarms from 2.9 to 0.13 per
-  device-year. What it loses are events that are only ever flagged in pieces shorter than an hour.
+  precision 0.73 / recall 0.86 / F1 0.79 to **0.97 / 0.74 / 0.84**, its event precision from 0.14 to **0.74**
+  (201 found events, 71 device-days with false alarms), and its false alarms from 2.9 to 0.13 per device-year.
+  What it loses are events that are only ever flagged in pieces shorter than an hour.
 - **Availability is robust.** Because time-based availability counts only outages (trips and open strings by
   default) and these are found reliably, every method except Hampel lands within 0.08 pp of the truth.
 
@@ -105,10 +112,14 @@ difference between tool and truth over the test plants, with causes from the rul
 ![PVDAQ](docs/img/real_pvdaq.png)
 
 The fleet has seven plain outages (an inverter at zero for at least two hours in sun while a neighbour
-produces): the 12-day stop of building A in June 2016 that the inverter's error code reported 10 days late
-(also found by [pv-anomaly-autoencoder](https://github.com/kwwaleszczynski-del/pv-anomaly-autoencoder)), three
-weeks of D1 in October-November 2017, B in November-December 2018, and three winter stops of the west-facing
-gymnasium G in January 2016. Every method finds all seven except Hampel (3 of 7).
+produces): building A from 4 June 2016, whose first error code came 10 days after the stop (also found by
+[pv-anomaly-autoencoder](https://github.com/kwwaleszczynski-del/pv-anomaly-autoencoder)), D1 from 17 October 2017,
+B in November-December 2018, and three winter stops of the west-facing gymnasium G in January 2016. Every method
+finds all seven except Hampel (3 of 7). The detectors see only the part with logged zeros: 12 of A's 34 days
+without output and about three of D1's seven weeks; after that the inverter data go missing and the period counts
+as a communication loss, as does B's 32-day gap in 2017. The course of these outages and the timestamp alignment
+of the channels are in [PVDAQ_SITE_NOTES.md](PVDAQ_SITE_NOTES.md), shared with the other repositories that use
+this campus.
 
 - **Thresholds tuned on a simulated plant of identical inverters do not transfer.** On five roofs with different
   orientations, broken clouds reach the buildings at different times and a quarter-hour mean of one roof can be
@@ -376,7 +387,9 @@ with at least one hit / truth events, both over production-loss classes only, so
 irradiance sensor stay false alarms. Delay = daylight hours from the event's first visible effect to the first
 flagged step. Duration error compares flagged hours with the truth's affected hours; energy error compares the
 summed lost energy of an event's hits with the truth. False alarms per device-year count unmatched detections per
-device of each level.
+device of each level. Because an event is often flagged in several detections, precision is also given per
+event (`benchmark.sensitivity`): event precision = found events / (found events + device-days with at least one
+unmatched detection), and fragments per event = hits / found events.
 
 ## Limitations
 

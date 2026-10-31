@@ -507,18 +507,25 @@ def sensitivity(data_dir: Path, out_dir: Path, min_hours=(0.5, 1.0, 2.0)) -> pd.
             for h in min_hours:
                 det, cf = ev.detect_events(fl, pl.f, min_steps=max(1, round(h / pl.f.panel.step_h)))
                 sc = evaluate(det, cf, pl, loss_ids)
-                fa = sc["det"][sc["det"]["truth_id"] < 0].groupby("level").size()
+                unmatched = sc["det"][sc["det"]["truth_id"] < 0]
+                fa = unmatched.groupby("level").size()
+                # what an operator would open: one ticket per found event, one per device and day of false alarms
+                fa_episodes = unmatched.groupby([unmatched["device_id"],
+                                                 pd.to_datetime(unmatched["start"]).dt.date]).ngroups
                 rows.append({"plant": pl.name, "method": m, "min_hours": h, "n_det": sc["n_det"],
                              "tp_det": sc["tp_det"], "n_truth": sc["n_truth"], "found": sc["found"],
+                             "fa_episodes": fa_episodes,
                              "fa_per_dev_year": float(sum(fa.get(lv_, 0) for lv_ in LEVELS_ALL))
                              / sum(n_dev.values())})
         log.info("sensitivity: %s done", pl.name)
     df = pd.DataFrame(rows)
-    g = df.groupby(["method", "min_hours"])[["n_det", "tp_det", "n_truth", "found"]].sum()
+    g = df.groupby(["method", "min_hours"])[["n_det", "tp_det", "n_truth", "found", "fa_episodes"]].sum()
     g["precision"] = g["tp_det"] / g["n_det"]
     g["recall"] = g["found"] / g["n_truth"]
     g["f1"] = 2 * g["precision"] * g["recall"] / (g["precision"] + g["recall"])
     g["fa_per_dev_year"] = df.groupby(["method", "min_hours"])["fa_per_dev_year"].mean()
+    g["fragments_per_event"] = g["tp_det"] / g["found"]
+    g["event_precision"] = g["found"] / (g["found"] + g["fa_episodes"])
     g = g.reset_index()
     g.to_csv(out_dir / "sensitivity_min_duration.csv", index=False)
     return g

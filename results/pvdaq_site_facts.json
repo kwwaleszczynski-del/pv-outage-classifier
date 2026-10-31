@@ -1,0 +1,88 @@
+{
+ "outages": {
+  "A": {
+   "system": 34,
+   "last_output": "2016-06-04 05:45:00",
+   "stop_in_sun": "2016-06-04 06:00:00",
+   "zero_output_logged_days": 12.24,
+   "inverter_data_missing_from": "2016-06-16 11:45:03",
+   "inverter_data_missing_days": 21.97,
+   "first_error_code": {
+    "time": "2016-06-14 07:28:11",
+    "code": 160
+   },
+   "first_error_code_after_stop_days": 10.06,
+   "error_codes": [
+    139,
+    160
+   ],
+   "output_back": "2016-07-08 11:00:00",
+   "days_without_output": 34.22
+  },
+  "B": {
+   "system": 1276,
+   "last_output": "2017-08-23 17:30:00",
+   "stop_in_sun": null,
+   "zero_output_logged_days": null,
+   "inverter_data_missing_from": "2017-08-24 05:15:02",
+   "inverter_data_missing_days": 32.09,
+   "first_error_code": {
+    "time": "2017-08-24 05:15:02",
+    "code": 139
+   },
+   "first_error_code_after_stop_days": null,
+   "error_codes": [
+    139,
+    160
+   ],
+   "output_back": "2017-09-25 07:30:00",
+   "days_without_output": 32.58
+  },
+  "D1": {
+   "system": 1278,
+   "last_output": "2017-10-16 16:45:00",
+   "stop_in_sun": "2017-10-17 07:00:00",
+   "zero_output_logged_days": 23.16,
+   "inverter_data_missing_from": "2017-11-09 10:45:03",
+   "inverter_data_missing_days": 26.0,
+   "first_error_code": {
+    "time": "2017-10-30 09:02:30",
+    "code": 160
+   },
+   "first_error_code_after_stop_days": 13.09,
+   "error_codes": [
+    139,
+    141,
+    142,
+    160
+   ],
+   "output_back": "2017-12-05 10:45:00",
+   "days_without_output": 49.75
+  }
+ },
+ "clock": {
+  "clear_days": 236,
+  "years": [
+   2016,
+   2017
+  ],
+  "sensor_tilt_deg": 5.0,
+  "array_tilt_deg": 11.2,
+  "azimuth_deg": 180.0,
+  "poa_vs_clear_sky": {
+   "median_min": -5.4,
+   "q25_min": -6.2,
+   "q75_min": -4.6
+  },
+  "ac_vs_clear_sky": {
+   "median_min": 3.8,
+   "q25_min": 1.5,
+   "q75_min": 5.2
+  },
+  "ac_vs_measured_poa": {
+   "median_min": 9.2,
+   "q25_min": 7.8,
+   "q75_min": 10.7
+  }
+ }
+}

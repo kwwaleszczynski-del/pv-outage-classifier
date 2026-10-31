@@ -140,7 +140,9 @@ were tuned on four other plant-years.</p>
   <div class="card wide" id="sens-card">
     <h2>Shortest event kept</h2>
     <p class="note">The same test plants and thresholds, with events required to last longer. A check of one setting
-    after the fact, not a re-tuning: the benchmark above keeps 30 minutes.</p>
+    after the fact, not a re-tuning: the benchmark above keeps 30 minutes. Precision counts detections, and one event
+    is often flagged in several; event precision counts each found event once and groups false alarms per device
+    and day.</p>
     <div class="table-wrap"><table id="sens-table"></table></div>
   </div>
 </div>
@@ -384,9 +386,10 @@ function sensTable() {
   if (!D.sensitivity) { document.getElementById("sens-card").style.display = "none"; return; }
   const hs = [...new Set(D.sensitivity.map(r => r.min_hours))].sort((a, b) => a - b);
   const get = (m, h) => D.sensitivity.find(r => r.method === m && r.min_hours === h) || {};
-  const head = "<thead><tr><th class='l'>method</th>" + hs.map(h => `<th>P / R / F1, ≥ ${h} h</th>`).join("") + hs.map(h => `<th>FA / device-year, ≥ ${h} h</th>`).join("") + "</tr></thead>";
+  const head = "<thead><tr><th class='l'>method</th>" + hs.map(h => `<th>P / R / F1, ≥ ${h} h</th>`).join("") + hs.map(h => `<th>event precision, ≥ ${h} h</th>`).join("") + hs.map(h => `<th>FA / device-year, ≥ ${h} h</th>`).join("") + "</tr></thead>";
   document.getElementById("sens-table").innerHTML = head + "<tbody>" + D.methods.map(m =>
     `<tr><td class='l'>${m.name}</td>` + hs.map(h => { const r = get(m.id, h); return `<td>${fmt(r.precision)} / ${fmt(r.recall)} / <b>${fmt(r.f1)}</b></td>`; }).join("") +
+    hs.map(h => `<td>${fmt(get(m.id, h).event_precision)}</td>`).join("") +
     hs.map(h => `<td>${fmt(get(m.id, h).fa_per_dev_year, 2)}</td>`).join("") + "</tr>").join("") + "</tbody>";
 }
 

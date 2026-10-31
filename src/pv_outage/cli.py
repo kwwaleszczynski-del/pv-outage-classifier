@@ -6,6 +6,7 @@ Usage:
     python -m pv_outage benchmark --jobs 4                      # synthetic method comparison (results/)
     python -m pv_outage sensitivity                             # the same test plants, longer minimum events
     python -m pv_outage real                                    # NREL PVDAQ fleet (downloads ~60 MB once)
+    python -m pv_outage site-facts                              # PVDAQ outage chronology, channel clocks
     python -m pv_outage shading                                 # labelled shading, Zenodo 23114394 (69 MB)
     python -m pv_outage report                                  # figures and docs/data.js
     python -m pv_outage all --jobs 4
@@ -87,6 +88,12 @@ def cmd_real(a):
     real.run(Path(a.data), Path(a.results))
 
 
+def cmd_site_facts(a):
+    from pv_outage import site_facts
+
+    site_facts.run(Path(a.data), Path(a.results))
+
+
 def cmd_shading(a):
     from pv_outage import shading_real
 
@@ -132,6 +139,8 @@ def main(argv=None):
     sub.add_parser("sensitivity", help="test plants with longer minimum event durations").set_defaults(
         fn=cmd_sensitivity)
     sub.add_parser("real", help="NREL PVDAQ Las Vegas fleet").set_defaults(fn=cmd_real)
+    sub.add_parser("site-facts", help="PVDAQ campus: outage chronology and channel clock offsets").set_defaults(
+        fn=cmd_site_facts)
     sub.add_parser("shading", help="real labelled shading, Zenodo 23114394 (file in data/zenodo)").set_defaults(
         fn=cmd_shading)
     sub.add_parser("report", help="figures and dashboard data").set_defaults(fn=cmd_report)
